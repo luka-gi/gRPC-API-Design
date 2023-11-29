@@ -23,16 +23,10 @@ def parse_args(server_config: ServerConfig):
 def serve(server_config: ServerConfig):
     parse_args(server_config)
 
-    # server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-
-    # post_service.addPostService(server)
-
     server = server_API.server_gRPC_API(server_config)
   
     server.start()
 
-    # server.add_insecure_port("[::]:" + server_config.port)
-    # server.start()
     print("Server started, listening on " + server_config.port)
 
     server.listen_and_serve()

@@ -1,8 +1,6 @@
 import post_pb2
 import post_pb2_grpc
 
-from database.DataBase import database_in_mem
-from database.DataBase_API import DataBase
 from datetime import datetime
 
 class Post:
@@ -94,9 +92,9 @@ class Video(Post):
 
 class Poster(post_pb2_grpc.PostServiceServicer):
 
-    def __init__(self):
+    def __init__(self, DBConn):
         super().__init__()
-        self.DBConn = DataBase()
+        self.DBConn = DBConn
 
     def requestValidated(self,request):
         if not (request.meta.title and request.meta.text and request.meta.state):
@@ -120,7 +118,8 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         # add to DB
         newImage.addNewImageToDatabase(self.DBConn)
 
-        print(database_in_mem.Posts)
+        # print to server console
+        print(self.DBConn.getPosts())
 
         return newImageResponse
 
@@ -140,6 +139,7 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         # add to DB
         newVideo.addNewVideoToDatabase(self.DBConn)
 
-        print(database_in_mem.Posts)
+        #print to server console
+        print(self.DBConn.getPosts())
 
         return newVideoResponse

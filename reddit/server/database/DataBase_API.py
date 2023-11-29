@@ -5,7 +5,7 @@ class DataBase():
         self.connection = None
 
     def connect(self):
-        pass
+        return self
 
     def close(self):
         pass
@@ -18,4 +18,28 @@ class DataBase():
         return pre_increment
     
     def addNewImagePost(self, title, text, state, published, score, ID, type, content):
-        pass
+        database_in_mem.Posts.append({
+            "score": score,
+            "published": published,
+            "ID": ID,
+            "title": title,
+            "text": text,
+            "state": state,
+            "type": type,
+            "content": content,
+        })
+
+    def addNewVideoPost(self, title, text, state, published, score, ID, type, content):
+        database_in_mem.Posts.append({
+            "score": score,
+            "published": published,
+            "ID": ID,
+            "title": title,
+            "text": text,
+            "state": state,
+            "type": type,
+            "content": content,
+        })
+
+    def getPosts(self):
+        return database_in_mem.Posts
