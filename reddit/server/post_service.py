@@ -146,6 +146,10 @@ class Poster(post_pb2_grpc.PostServiceServicer):
 
         if not post:
             return None
+        
+        yield post_pb2.GetPostContentResponse(
+            type=post["type"]
+        )
 
         if post["type"] == "IMAGE":
             yield post_pb2.GetPostContentResponse(

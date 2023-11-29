@@ -62,6 +62,7 @@ message GetPostContentRequest {
 }
 
 message GetPostContentResponse {
+  optional PostMeta.ContentType type = 3;
   repeated string videoframes = 1;
   string imageurl = 2;
 }

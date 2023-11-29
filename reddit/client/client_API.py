@@ -42,7 +42,16 @@ class client_gRPC_API:
             postID=postID
         ))
 
-        return list(response)
+        response_list = list(response)
+
+        type = response_list[0].type
+
+        if type == post_pb2.PostMeta(type="IMAGE").type:
+            return response_list[1].imageurl
+        elif type == post_pb2.PostMeta(type="VIDEO").type:
+            return response_list[1].videoframes
+        else:
+            return None
 
     def close(self):
         self.channel.close()
