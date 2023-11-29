@@ -7,6 +7,8 @@ import reddit_pb2_grpc
 
 from DataBase import DB
 from datetime import datetime
+from google.protobuf.json_format import MessageToJson
+import json
 
 class Poster(reddit_pb2_grpc.PostServiceServicer):
 
@@ -48,18 +50,49 @@ class Poster(reddit_pb2_grpc.PostServiceServicer):
         # add to DB
         # take enums from request
         DB.Posts.append({
-            "title": newImage.title,
-            "text": newImage.text,
+            "title": request.meta.title,
+            "text": request.meta.text,
             "score": newImage.score,
             "state": request.meta.state,
             "published": newImage.published,
             "ID": newImage.ID,
             "type": type,
-            "content": newImage.image.url,
+            "content": request.image.url,
         })
         print(DB.Posts)
 
         return newImage
+
+    def PostVideo(self, request, context):
+        if not self.requestValidated(request):
+            return None
+
+        if not request.video.frames:
+            return None
+
+        type = "VIDEO"
+
+        newVideo = self.populatePostMetadata(request)
+
+        # populate image-specifics to post
+        newVideo.type = type
+        newVideo.video.CopyFrom(request.video)
+
+        # add to DB
+        # take enums from request
+        DB.Posts.append({
+            "title": request.meta.title,
+            "text": request.meta.text,
+            "score": newVideo.score,
+            "state": request.meta.state,
+            "published": newVideo.published,
+            "ID": newVideo.ID,
+            "type": type,
+            "content": request.video.frames,
+        })
+        print(DB.Posts)
+
+        return newVideo
 
 # partial implementation from the official gRPC tutorial
 def serve():

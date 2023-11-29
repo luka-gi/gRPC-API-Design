@@ -62,6 +62,12 @@ message NewImagePostRequest {
   Image image = 2;
 }
 
+message NewVideoPostRequest {
+  NewPostMeta meta = 1;
+  Video video = 2;
+}
+
 service PostService {
   rpc PostImage (NewImagePostRequest) returns (Post) {}
+  rpc PostVideo (NewVideoPostRequest) returns (Post) {}
 }

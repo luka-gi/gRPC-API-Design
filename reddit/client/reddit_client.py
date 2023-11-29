@@ -21,7 +21,19 @@ def run():
             image=reddit_pb2.Image(url="http://")
         ))
 
-        print("Post received: ")
+        print("Post 1 received: ")
+        print(response)
+
+        response = stub.PostVideo(reddit_pb2.NewVideoPostRequest(
+            meta=reddit_pb2.NewPostMeta(
+                title="fakeTitle",
+                text="fakeText",
+                state="NORMAL",
+            ),
+            video=reddit_pb2.Video(frames=["frame45","frame46","frame47"])
+        ))
+
+        print("Post 2 received: ")
         print(response)
 
 if __name__ == "__main__":
