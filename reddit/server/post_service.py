@@ -1,50 +1,102 @@
 import post_pb2
 import post_pb2_grpc
 
-from DataBase import DB
+from database.DataBase import database_in_mem
+from database.DataBase_API import DataBase
 from datetime import datetime
+
+class Post:
+    def __init__(self,DBConn,request):
+        self.score = 0
+        self.published=datetime.today().strftime('%m/%d/%Y')
+        self.title = request.meta.title
+        self.text = request.meta.text
+        self.state = request.meta.state
+        self.ID = DBConn.getNewPostID()
+
+    def convertMeta(self):
+        return post_pb2.PostMeta(
+                title = self.title,
+                text = self.text,
+                state = self.state,
+                published = self.published,
+                score = self.score,
+                ID = self.ID
+            )
+
+class Image(Post):
+    def __init__(self, DBConn, request):
+        super().__init__(DBConn, request)
+        self.type = "IMAGE"
+        self.content = request.image.url
+
+    def convertMeta(self):
+        MetaToReturn = super().convertMeta()
+        MetaToReturn.type = self.type
+        return MetaToReturn
+
+    def convertImage(self):
+        return post_pb2.Image(
+            url = self.content
+        )
+
+    def convertToImagePostResponse(self):
+        return post_pb2.ImagePostResponse(
+            meta=self.convertMeta(),
+            image=self.convertImage()
+        )
+    
+    def addNewImageToDatabase(self, DBConn):
+        DBConn.addNewImagePost(
+            self.title,
+            self.text,
+            self.state,
+            self.published,
+            self.score,
+            self.ID,
+            self.type,
+            self.content
+        )
+    
+class Video(Post):
+    def __init__(self, DBConn, request):
+        super().__init__(DBConn, request)
+        self.type = "VIDEO"
+        self.content = request.video.frames
+
+    def convertMeta(self):
+        MetaToReturn = super().convertMeta()
+        MetaToReturn.type = self.type
+        return MetaToReturn
+
+    def convertVideo(self):
+        return post_pb2.Video(
+            frames = self.content
+        )
+
+    def convertToVideoPostResponse(self):
+        return post_pb2.VideoPostResponse(
+            meta=self.convertMeta(),
+            video=self.convertVideo()
+        )
+    
+    def addNewVideoToDatabase(self, DBConn):
+        DBConn.addNewImagePost(
+            self.title,
+            self.text,
+            self.state,
+            self.published,
+            self.score,
+            self.ID,
+            self.type,
+            self.content
+        )
 
 class Poster(post_pb2_grpc.PostServiceServicer):
 
-    def createImagePostResponse(self, request):
-        type = "IMAGE"
-
-        newImage = post_pb2.ImagePostResponse(
-            meta=post_pb2.PostMeta(
-                score=0,
-                published=datetime.today().strftime('%m/%d/%Y'),
-                ID=DB.PostID,
-                title=request.meta.title,
-                text=request.meta.text,
-                type=type,
-                state=request.meta.state,
-            ),
-            image=request.image,
-        )
-
-        DB.PostID = DB.PostID + 1
-
-        return newImage
-
-    def createVideoPostResponse(self, request):
-        type = "VIDEO"
-
-        newVideo = post_pb2.VideoPostResponse(
-            meta=post_pb2.PostMeta(
-                score=0,
-                published=datetime.today().strftime('%m/%d/%Y'),
-                ID=DB.PostID,
-                title=request.meta.title,
-                text=request.meta.text,
-                type=type,
-                state=request.meta.state,
-            ),
-            video=request.video,
-        )
-
-        DB.PostID = DB.PostID + 1
-
-        return newVideo
+    def __init__(self):
+        super().__init__()
+        self.DBConn = DataBase()
 
     def requestValidated(self,request):
         if not (request.meta.title and request.meta.text and request.meta.state):
@@ -58,24 +110,19 @@ class Poster(post_pb2_grpc.PostServiceServicer):
 
         if not request.image.url:
             return None
+        
+        # parse request
+        newImage = Image(self.DBConn,request)
 
-        newImage = self.createImagePostResponse(request)
+        # make post response
+        newImageResponse = newImage.convertToImagePostResponse()
 
         # add to DB
-        # take enums from request
-        DB.Posts.append({
-            "score": newImage.meta.score,
-            "published": newImage.meta.published,
-            "ID": newImage.meta.ID,
-            "title": request.meta.title,
-            "text": request.meta.text,
-            "state": request.meta.state,
-            "type": "IMAGE",
-            "content": request.image.url,
-        })
-        print(DB.Posts)
+        newImage.addNewImageToDatabase(self.DBConn)
 
-        return newImage
+        print(database_in_mem.Posts)
+
+        return newImageResponse
 
     def PostVideo(self, request, context):
         if not self.requestValidated(request):
@@ -84,20 +131,15 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         if not request.video.frames:
             return None
 
-        newVideo = self.createVideoPostResponse(request)
+        # parse request
+        newVideo = Video(self.DBConn,request)
+
+        # make post response
+        newVideoResponse = newVideo.convertToVideoPostResponse()
 
         # add to DB
-        # take enums from request
-        DB.Posts.append({
-            "score": newVideo.meta.score,
-            "published": newVideo.meta.published,
-            "ID": newVideo.meta.ID,
-            "title": request.meta.title,
-            "text": request.meta.text,
-            "state": request.meta.state,
-            "type": "VIDEO",
-            "content": request.video.frames,
-        })
-        print(DB.Posts)
+        newVideo.addNewVideoToDatabase(self.DBConn)
 
-        return newVideo
+        print(database_in_mem.Posts)
+
+        return newVideoResponse

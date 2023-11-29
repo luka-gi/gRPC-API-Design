@@ -1,4 +1,4 @@
-class DB:
+class database_in_mem:
     Users = [
         {
             "UID": "testuser",
