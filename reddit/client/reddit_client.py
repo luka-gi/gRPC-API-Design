@@ -12,10 +12,13 @@ def run():
     with grpc.insecure_channel("localhost:50051") as channel:
         stub = reddit_pb2_grpc.PostServiceStub(channel)
 
-        response = stub.CreatePost(reddit_pb2.NewPostRequest(
-            title="fakeTitle",
-            text="fakeText",
-            state="NORMAL",
+        response = stub.PostImage(reddit_pb2.NewImagePostRequest(
+            meta=reddit_pb2.NewPostMeta(
+                title="fakeTitle",
+                text="fakeText",
+                state="NORMAL",
+            ),
+            image=reddit_pb2.Image(url="http://")
         ))
 
         print("Post received: ")

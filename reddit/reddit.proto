@@ -13,12 +13,30 @@ message Post {
   optional PostState state = 4;
   optional string published = 5;
   optional int32 ID = 6;
+  oneof content {
+    Image image = 7;
+    Video video = 8;
+  }
+  optional ContentType type = 9;
+
+  enum ContentType {
+    IMAGE = 0;
+    VIDEO = 1;
+  }
 
   enum PostState {
     NORMAL = 0;
     LOCKED = 1;
     HIDDEN = 2;
   }
+}
+
+message Image {
+  optional string url = 1;
+}
+
+message Video {
+  repeated string frames = 2;
 }
 
 message Comment {
@@ -33,12 +51,17 @@ message Comment {
   }
 }
 
-message NewPostRequest {
+message NewPostMeta {
   string title = 1;
   string text = 2;
   string state = 3;
 }
 
+message NewImagePostRequest {
+  NewPostMeta meta = 1;
+  Image image = 2;
+}
+
 service PostService {
-  rpc CreatePost (NewPostRequest) returns (Post) {}
+  rpc PostImage (NewImagePostRequest) returns (Post) {}
 }

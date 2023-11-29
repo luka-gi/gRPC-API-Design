@@ -9,33 +9,52 @@ from DataBase import DB
 from datetime import datetime
 
 class Poster(reddit_pb2_grpc.PostServiceServicer):
-    def CreatePost(self, request, context):
-        if not (request.title and request.text and request.state):
+
+    class NewPostMetaData():
+        def __init__(self):
+            self.score = 0
+            self.published = datetime.today().strftime('%m/%d/%Y')
+            self.ID = DB.PostID
+            DB.PostID = DB.PostID + 1
+
+    def requestValidated(self,request):
+        if not (request.meta.title and request.meta.text and request.meta.state):
+            return False
+
+        return True
+
+    def PostImage(self, request, context):
+        if not self.requestValidated(request):
             return None
-        
-        score = 0
-        published = datetime.today().strftime('%m/%d/%Y')
-        ID = DB.PostID
-        DB.PostID = DB.PostID + 1
+
+        if not request.image.url:
+            return None
+
+        meta = self.NewPostMetaData()
+        meta.type = "IMAGE"
 
         DB.Posts.append({
-            "title": request.title,
-            "text": request.text,
-            "score": score,
-            "state": request.state,
-            "published": published,
-            "ID": ID,
+            "title": request.meta.title,
+            "text": request.meta.text,
+            "score": meta.score,
+            "state": request.meta.state,
+            "published": meta.published,
+            "ID": meta.ID,
+            "type": meta.type,
+            "content": request.image.url,
         })
 
         print(DB.Posts)
 
         return reddit_pb2.Post(
-            title=request.title,
-            text=request.title,
-            score=score,
-            state=request.state,
-            published=published,
-            ID=ID
+            title=request.meta.title,
+            text=request.meta.text,
+            score=meta.score,
+            state=request.meta.state,
+            published=meta.published,
+            ID=meta.ID,
+            type=meta.type,
+            image=request.image,
         )
 
 # partial implementation from the official gRPC tutorial
