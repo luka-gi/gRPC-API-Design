@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package reddit.user;
+package reddit;
 
 message User {
   string UID = 1;
