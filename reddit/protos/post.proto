@@ -16,7 +16,7 @@ message PostMeta {
   optional int32 score = 3;
   optional PostState state = 4;
   optional string published = 5;
-  optional int32 ID = 6;
+  optional int64 ID = 6;
   optional ContentType type = 9;
 
   enum ContentType {
@@ -57,7 +57,17 @@ message NewVideoPostRequest {
   Video video = 2;
 }
 
+message GetPostContentRequest {
+  optional int64 postID = 1;
+}
+
+message GetPostContentResponse {
+  repeated string videoframes = 1;
+  string imageurl = 2;
+}
+
 service PostService {
   rpc PostImage (NewImagePostRequest) returns (ImagePostResponse) {}
   rpc PostVideo (NewVideoPostRequest) returns (VideoPostResponse) {}
+  rpc GetPostContent (GetPostContentRequest) returns (stream GetPostContentResponse) {}
 }

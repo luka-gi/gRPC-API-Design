@@ -36,6 +36,13 @@ class client_gRPC_API:
             ),
             video=post_pb2.Video(frames=video_frames)
         ))
+    
+    def getPostContent(self, postID):
+        response = self.post_service.GetPostContent(post_pb2.GetPostContentRequest(
+            postID=postID
+        ))
+
+        return list(response)
 
     def close(self):
         self.channel.close()

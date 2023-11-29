@@ -43,3 +43,9 @@ class DataBase():
 
     def getPosts(self):
         return database_in_mem.Posts
+    
+    def getPostByID(self, postID):
+        for post in database_in_mem.Posts:
+            if post["ID"] is postID:
+                return post
+        return None

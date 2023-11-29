@@ -47,6 +47,16 @@ def start_client(client_config: ClientConfig):
     print("Post 2 received: ")
     print(response)
 
+    response = client.getPostContent(0)
+
+    print("Post 3 received: ")
+    print(response)
+
+    response = client.getPostContent(1)
+
+    print("Post 4 received: ")
+    print(response)
+
     client.close()
 
 if __name__ == "__main__":

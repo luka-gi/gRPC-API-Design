@@ -96,14 +96,8 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         super().__init__()
         self.DBConn = DBConn
 
-    def requestValidated(self,request):
-        if not (request.meta.title and request.meta.text and request.meta.state):
-            return False
-
-        return True
-
     def PostImage(self, request, context):
-        if not self.requestValidated(request):
+        if not (request.meta.title and request.meta.text and request.meta.state):
             return None
 
         if not request.image.url:
@@ -124,7 +118,7 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         return newImageResponse
 
     def PostVideo(self, request, context):
-        if not self.requestValidated(request):
+        if not (request.meta.title and request.meta.text and request.meta.state):
             return None
 
         if not request.video.frames:
@@ -143,3 +137,23 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         print(self.DBConn.getPosts())
 
         return newVideoResponse
+    
+    def GetPostContent(self, request, context):
+        if request.postID == None:
+            return None
+        
+        post = self.DBConn.getPostByID(request.postID)
+
+        if not post:
+            return None
+
+        if post["type"] == "IMAGE":
+            yield post_pb2.GetPostContentResponse(
+                imageurl=post["content"]
+            )
+        elif post["type"] == "VIDEO":
+             yield post_pb2.GetPostContentResponse(
+                videoframes=post["content"]
+            )           
+        else:
+            return None
