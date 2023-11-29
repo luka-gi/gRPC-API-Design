@@ -6,10 +6,33 @@ import grpc
 import post_pb2
 import post_pb2_grpc
 
+import argparse
+
+class ClientConfig():
+    def __init__(self):
+        self.host = "localhost"
+        self.port = "50051"
+
+def parse_args(client_config: ClientConfig):
+    parser = argparse.ArgumentParser(description="gRPC server")
+
+    parser.add_argument('-H, --host', dest='host', type=str,
+                    help="hostname where server can be found",
+                    default=client_config.host)
+    parser.add_argument('-p, --port', dest='port', type=str,
+                        help="port where server can be found",
+                        default=client_config.port)
+
+    args = parser.parse_args()
+
+    client_config.port = args.port
+    client_config.host = args.host
+
 # partial implementation from the official gRPC tutorial
-def run():
-    print("Createing post...")
-    with grpc.insecure_channel("localhost:50051") as channel:
+def run(client_config: ClientConfig):
+    server_location = client_config.host + ":" + client_config.port
+    with grpc.insecure_channel(server_location) as channel:
+        print("Creating post...")
         stub = post_pb2_grpc.PostServiceStub(channel)
 
         response = stub.PostImage(post_pb2.NewImagePostRequest(
@@ -38,4 +61,5 @@ def run():
 
 if __name__ == "__main__":
     logging.basicConfig()
-    run()
+    client_config = ClientConfig()
+    run(client_config)

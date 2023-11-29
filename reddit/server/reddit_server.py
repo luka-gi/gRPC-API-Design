@@ -1,22 +1,40 @@
 from concurrent import futures
 import logging
+import argparse
 
 import grpc
-from post_pb2_grpc import add_PostServiceServicer_to_server
-
 import post_service
 
+class ServerConfig():
+    def __init__(self):
+        self.port = "50051"
+
+def parse_args(server_config: ServerConfig):
+    parser = argparse.ArgumentParser(description="gRPC server")
+
+    parser.add_argument('-p, --port', dest='port', type=str,
+                        help="port to run server on",
+                        default=server_config.port)
+
+    args = parser.parse_args()
+
+    server_config.port = args.port
+
 # partial implementation from the official gRPC tutorial
-def serve():
-    port = "50051"
+def serve(server_config: ServerConfig):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    add_PostServiceServicer_to_server(post_service.Poster(), server)
-    server.add_insecure_port("[::]:" + port)
+
+    post_service.addPostService(server)
+
+    server.add_insecure_port("[::]:" + server_config.port)
     server.start()
-    print("Server started, listening on " + port)
+    print("Server started, listening on " + server_config.port)
+
     server.wait_for_termination()
 
 
 if __name__ == "__main__":
     logging.basicConfig()
-    serve()
+    server_config = ServerConfig()
+    parse_args(server_config)
+    serve(server_config)
