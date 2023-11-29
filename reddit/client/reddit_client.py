@@ -2,9 +2,7 @@ from __future__ import print_function
 
 import logging
 
-import grpc
-import post_pb2
-import post_pb2_grpc
+import client_API
 
 import argparse
 
@@ -29,37 +27,28 @@ def parse_args(client_config: ClientConfig):
     client_config.host = args.host
 
 # partial implementation from the official gRPC tutorial
-def run(client_config: ClientConfig):
-    server_location = client_config.host + ":" + client_config.port
-    with grpc.insecure_channel(server_location) as channel:
-        print("Creating post...")
-        stub = post_pb2_grpc.PostServiceStub(channel)
+def start_client(client_config: ClientConfig):
 
-        response = stub.PostImage(post_pb2.NewImagePostRequest(
-            meta=post_pb2.NewPostMeta(
-                title="fakeTitle",
-                text="fakeText",
-                state="NORMAL",
-            ),
-            image=post_pb2.Image(url="http://")
-        ))
+    parse_args(client_config)
 
-        print("Post 1 received: ")
-        print(response)
+    client = client_API.client_gRPC_API(client_config)
+  
+    client.open()
 
-        response = stub.PostVideo(post_pb2.NewVideoPostRequest(
-            meta=post_pb2.NewPostMeta(
-                title="fakeTitle",
-                text="fakeText",
-                state="NORMAL",
-            ),
-            video=post_pb2.Video(frames=["frame45","frame46","frame47"])
-        ))
+    print("Creating post...")
 
-        print("Post 2 received: ")
-        print(response)
+    response = client.postImage("fakeTitle","fakeText","NORMAL","http://")
+
+    print("Post 1 received: ")
+    print(response)
+
+    response = client.postVideo("fakeVideoTitle","fakeVideoDesc","NORMAL",["frame45","frame46","frame47"])
+
+    print("Post 2 received: ")
+    print(response)
+
+    client.close()
 
 if __name__ == "__main__":
-    logging.basicConfig()
-    client_config = ClientConfig()
-    run(client_config)
+    logging.basicConfig()    
+    start_client(ClientConfig())

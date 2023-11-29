@@ -101,6 +101,3 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         print(DB.Posts)
 
         return newVideo
-    
-def addPostService(server):
-    post_pb2_grpc.add_PostServiceServicer_to_server(Poster(), server)
