@@ -6,17 +6,13 @@ message User {
   string UID = 1;
 }
 
-message Post {
+message PostMeta {
   optional string title = 1;
   optional string text = 2;
   optional int32 score = 3;
   optional PostState state = 4;
   optional string published = 5;
   optional int32 ID = 6;
-  oneof content {
-    Image image = 7;
-    Video video = 8;
-  }
   optional ContentType type = 9;
 
   enum ContentType {
@@ -29,6 +25,16 @@ message Post {
     LOCKED = 1;
     HIDDEN = 2;
   }
+}
+
+message ImagePostResponse {
+  PostMeta meta = 1;
+  Image image = 2;
+}
+
+message VideoPostResponse {
+  PostMeta meta = 1;
+  Video video = 2;
 }
 
 message Image {
@@ -68,6 +74,6 @@ message NewVideoPostRequest {
 }
 
 service PostService {
-  rpc PostImage (NewImagePostRequest) returns (Post) {}
-  rpc PostVideo (NewVideoPostRequest) returns (Post) {}
+  rpc PostImage (NewImagePostRequest) returns (ImagePostResponse) {}
+  rpc PostVideo (NewVideoPostRequest) returns (VideoPostResponse) {}
 }

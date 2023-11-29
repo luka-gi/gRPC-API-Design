@@ -12,19 +12,45 @@ import json
 
 class Poster(reddit_pb2_grpc.PostServiceServicer):
 
-    def populatePostMetadata(self, request):
-        newImage = reddit_pb2.Post(
-            score=0,
-            published=datetime.today().strftime('%m/%d/%Y'),
-            ID=DB.PostID,
-            title=request.meta.title,
-            text=request.meta.text,
-            state=request.meta.state,
+    def createImagePostResponse(self, request):
+        type = "IMAGE"
+
+        newImage = reddit_pb2.ImagePostResponse(
+            meta=reddit_pb2.PostMeta(
+                score=0,
+                published=datetime.today().strftime('%m/%d/%Y'),
+                ID=DB.PostID,
+                title=request.meta.title,
+                text=request.meta.text,
+                type=type,
+                state=request.meta.state,
+            ),
+            image=request.image,
         )
 
         DB.PostID = DB.PostID + 1
 
         return newImage
+
+    def createVideoPostResponse(self, request):
+        type = "VIDEO"
+
+        newVideo = reddit_pb2.VideoPostResponse(
+            meta=reddit_pb2.PostMeta(
+                score=0,
+                published=datetime.today().strftime('%m/%d/%Y'),
+                ID=DB.PostID,
+                title=request.meta.title,
+                text=request.meta.text,
+                type=type,
+                state=request.meta.state,
+            ),
+            video=request.video,
+        )
+
+        DB.PostID = DB.PostID + 1
+
+        return newVideo
 
     def requestValidated(self,request):
         if not (request.meta.title and request.meta.text and request.meta.state):
@@ -39,24 +65,18 @@ class Poster(reddit_pb2_grpc.PostServiceServicer):
         if not request.image.url:
             return None
 
-        type = "IMAGE"
-
-        newImage = self.populatePostMetadata(request)
-
-        # populate image-specifics to post
-        newImage.type = type
-        newImage.image.CopyFrom(request.image)
+        newImage = self.createImagePostResponse(request)
 
         # add to DB
         # take enums from request
         DB.Posts.append({
+            "score": newImage.meta.score,
+            "published": newImage.meta.published,
+            "ID": newImage.meta.ID,
             "title": request.meta.title,
             "text": request.meta.text,
-            "score": newImage.score,
             "state": request.meta.state,
-            "published": newImage.published,
-            "ID": newImage.ID,
-            "type": type,
+            "type": "IMAGE",
             "content": request.image.url,
         })
         print(DB.Posts)
@@ -70,24 +90,18 @@ class Poster(reddit_pb2_grpc.PostServiceServicer):
         if not request.video.frames:
             return None
 
-        type = "VIDEO"
-
-        newVideo = self.populatePostMetadata(request)
-
-        # populate image-specifics to post
-        newVideo.type = type
-        newVideo.video.CopyFrom(request.video)
+        newVideo = self.createVideoPostResponse(request)
 
         # add to DB
         # take enums from request
         DB.Posts.append({
+            "score": newVideo.meta.score,
+            "published": newVideo.meta.published,
+            "ID": newVideo.meta.ID,
             "title": request.meta.title,
             "text": request.meta.text,
-            "score": newVideo.score,
             "state": request.meta.state,
-            "published": newVideo.published,
-            "ID": newVideo.ID,
-            "type": type,
+            "type": "VIDEO",
             "content": request.video.frames,
         })
         print(DB.Posts)
