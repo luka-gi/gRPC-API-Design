@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package reddit.comment;
+
+import "user.proto";
+
+message Comment {
+  user.User author = 1;
+  string score = 2;
+  CommentState state = 3;
+  string published = 4;
+
+  enum CommentState {
+    NORMAL = 0;
+    HIDDEN = 1;
+  }
+}

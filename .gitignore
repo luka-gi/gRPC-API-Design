@@ -1,4 +1,5 @@
 venv
 grpc
 
-reddit_pb2*
+*_pb2*
+__pycache__

@@ -2,21 +2,21 @@ from concurrent import futures
 import logging
 
 import grpc
-import reddit_pb2
-import reddit_pb2_grpc
+import post_pb2
+import post_pb2_grpc
 
 from DataBase import DB
 from datetime import datetime
 from google.protobuf.json_format import MessageToJson
 import json
 
-class Poster(reddit_pb2_grpc.PostServiceServicer):
+class Poster(post_pb2_grpc.PostServiceServicer):
 
     def createImagePostResponse(self, request):
         type = "IMAGE"
 
-        newImage = reddit_pb2.ImagePostResponse(
-            meta=reddit_pb2.PostMeta(
+        newImage = post_pb2.ImagePostResponse(
+            meta=post_pb2.PostMeta(
                 score=0,
                 published=datetime.today().strftime('%m/%d/%Y'),
                 ID=DB.PostID,
@@ -35,8 +35,8 @@ class Poster(reddit_pb2_grpc.PostServiceServicer):
     def createVideoPostResponse(self, request):
         type = "VIDEO"
 
-        newVideo = reddit_pb2.VideoPostResponse(
-            meta=reddit_pb2.PostMeta(
+        newVideo = post_pb2.VideoPostResponse(
+            meta=post_pb2.PostMeta(
                 score=0,
                 published=datetime.today().strftime('%m/%d/%Y'),
                 ID=DB.PostID,
@@ -112,7 +112,7 @@ class Poster(reddit_pb2_grpc.PostServiceServicer):
 def serve():
     port = "50051"
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    reddit_pb2_grpc.add_PostServiceServicer_to_server(Poster(), server)
+    post_pb2_grpc.add_PostServiceServicer_to_server(Poster(), server)
     server.add_insecure_port("[::]:" + port)
     server.start()
     print("Server started, listening on " + port)
