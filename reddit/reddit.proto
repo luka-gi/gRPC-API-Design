@@ -7,12 +7,12 @@ message User {
 }
 
 message Post {
-  string title = 1;
-  string text = 2;
-  int32 score = 3;
-  PostState state = 4;
-  string published = 5;
-  string ID = 6;
+  optional string title = 1;
+  optional string text = 2;
+  optional int32 score = 3;
+  optional PostState state = 4;
+  optional string published = 5;
+  optional int32 ID = 6;
 
   enum PostState {
     NORMAL = 0;
