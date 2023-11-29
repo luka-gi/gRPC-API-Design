@@ -2,12 +2,13 @@ from concurrent import futures
 import logging
 
 import grpc
+from DataBase import DB
 import reddit_pb2
 import reddit_pb2_grpc
 
 class Poster(reddit_pb2_grpc.PostServiceServicer):
     def CreatePost(self, request, context):
-        return reddit_pb2.Post(title="Hello, %s!" % request.title)
+        return reddit_pb2.Post(title="Hello, %s!" % DB.Posts[0]["title"])
 
 # partial implementation from the official gRPC tutorial
 def serve():
