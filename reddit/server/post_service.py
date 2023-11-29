@@ -112,9 +112,6 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         # add to DB
         newImage.addNewImageToDatabase(self.DBConn)
 
-        # print to server console
-        print(self.DBConn.getPosts())
-
         return newImageResponse
 
     def PostVideo(self, request, context):
@@ -132,9 +129,6 @@ class Poster(post_pb2_grpc.PostServiceServicer):
 
         # add to DB
         newVideo.addNewVideoToDatabase(self.DBConn)
-
-        #print to server console
-        print(self.DBConn.getPosts())
 
         return newVideoResponse
     
@@ -161,3 +155,25 @@ class Poster(post_pb2_grpc.PostServiceServicer):
             )           
         else:
             return None
+        
+    def RatePost(self, request, contex):
+        if request.postID == None:
+            return None
+        
+        post = self.DBConn.ratePost(request.postID, request.rating)
+
+        if not post:
+            return None
+        
+        RatePostResponse = post_pb2.RatePostResponse(
+            meta=post_pb2.PostMeta(
+                title = post["title"],
+                text = post["text"],
+                state = post["state"],
+                published = post["published"],
+                score = post["score"],
+                ID = post["ID"]
+            )
+        )
+
+        return RatePostResponse

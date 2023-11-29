@@ -57,6 +57,16 @@ def start_client(client_config: ClientConfig):
     print("Post 4 received: ")
     print(response)
 
+    response = client.ratePost(1, "UPVOTE")
+
+    print("Post 5 received: ")
+    print(response)
+
+    response = client.ratePost(0, "DOWNVOTE")
+
+    print("Post 6 received: ")
+    print(response)
+
     client.close()
 
 if __name__ == "__main__":

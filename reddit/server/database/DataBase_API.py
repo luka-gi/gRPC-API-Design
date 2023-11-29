@@ -49,3 +49,13 @@ class DataBase():
             if post["ID"] is postID:
                 return post
         return None
+    
+    def ratePost(self, postID, rating):
+        post = self.getPostByID(postID)
+
+        if(rating == "UPVOTE"):
+            post["score"] = post["score"] + 1
+        elif(rating == "DOWNVOTE"):
+            post["score"] = post["score"] - 1
+
+        return post

@@ -67,8 +67,23 @@ message GetPostContentResponse {
   string imageurl = 2;
 }
 
+message RatePostRequest {
+  optional int64 postID = 1;
+  optional string rating = 2;
+
+  enum Rating {
+    UPVOTE = 0;
+    DOWNVOTE = 1;
+  }
+}
+
+message RatePostResponse {
+  optional PostMeta meta = 1;
+}
+
 service PostService {
   rpc PostImage (NewImagePostRequest) returns (ImagePostResponse) {}
   rpc PostVideo (NewVideoPostRequest) returns (VideoPostResponse) {}
   rpc GetPostContent (GetPostContentRequest) returns (stream GetPostContentResponse) {}
+  rpc RatePost (RatePostRequest) returns (RatePostResponse) {}
 }

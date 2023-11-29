@@ -52,6 +52,14 @@ class client_gRPC_API:
             return response_list[1].videoframes
         else:
             return None
+        
+    def ratePost(self, postID, rating):
+        response = self.post_service.RatePost(post_pb2.RatePostRequest(
+            postID=postID,
+            rating=rating
+        ))
+
+        return response
 
     def close(self):
         self.channel.close()
