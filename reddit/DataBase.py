@@ -8,6 +8,8 @@ class DB:
         }
     ]
 
+    PostID = 2
+
     Posts = [
         {
             "title": "testTitle",
@@ -15,7 +17,7 @@ class DB:
             "score": 40,
             "state": "NORMAL",
             "published": "11/28/2023",
-            "ID": "203",
+            "ID": 0,
         },
         {
             "title": "testTitle2",
@@ -23,6 +25,6 @@ class DB:
             "score": -3,
             "state": "NORMAL",
             "published": "11/28/2023",
-            "ID": "204",
+            "ID": 1,
         },
     ]
