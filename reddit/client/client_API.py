@@ -1,6 +1,9 @@
 import grpc
 import post_pb2_grpc
 import post_pb2
+import comment_pb2_grpc
+import comment_pb2
+import user_pb2
 
 class client_gRPC_API:
 
@@ -9,6 +12,7 @@ class client_gRPC_API:
         self.host = client_config.host
         self.channel = None
         self.post_service = None
+        self.comment_service = None
 
     def open(self):
         server_location = self.host + ":" + self.port
@@ -16,6 +20,7 @@ class client_gRPC_API:
         self.channel = grpc.insecure_channel(server_location)
 
         self.post_service = post_pb2_grpc.PostServiceStub(self.channel)
+        self.comment_service = comment_pb2_grpc.CommentServiceStub(self.channel)
 
     def postImage(self, title, text, state, image_url):
         return self.post_service.PostImage(post_pb2.NewImagePostRequest(
@@ -63,3 +68,12 @@ class client_gRPC_API:
 
     def close(self):
         self.channel.close()
+
+    def createComment(self, userID, content, state):
+        return self.comment_service.CreateComment(comment_pb2.NewCommentRequest(
+            author=user_pb2.User(
+                UID = userID
+            ),
+            state = state,
+            content=content
+        ))

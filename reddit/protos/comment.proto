@@ -5,13 +5,29 @@ package reddit.comment;
 import "user.proto";
 
 message Comment {
-  user.User author = 1;
-  string score = 2;
-  CommentState state = 3;
-  string published = 4;
+  optional user.User author = 1;
+  optional int32 score = 2;
+  optional CommentState state = 3;
+  optional string published = 4;
+  optional string content = 5;
+  optional int64 ID = 6;
 
   enum CommentState {
     NORMAL = 0;
     HIDDEN = 1;
   }
+}
+
+message NewCommentRequest {
+  optional user.User author = 1;
+  optional Comment.CommentState state = 2;
+  optional string content = 3;
+}
+
+message NewCommentResponse {
+  optional Comment comment = 1;
+}
+
+service CommentService {
+  rpc CreateComment (NewCommentRequest) returns (NewCommentResponse) {}
 }

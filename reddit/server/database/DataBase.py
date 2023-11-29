@@ -8,6 +8,19 @@ class database_in_mem:
         }
     ]
 
+    CommentID = 1
+
+    Comments = [
+        {
+            "ID": 0,
+            "score": 3,
+            "author": "testuser",
+            "state": "NORMAL",
+            "published": "11/30/23",
+            "content": "example comments"
+        }
+    ]
+
     PostID = 2
 
     Posts = [

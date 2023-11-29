@@ -26,15 +26,7 @@ def parse_args(client_config: ClientConfig):
     client_config.port = args.port
     client_config.host = args.host
 
-# partial implementation from the official gRPC tutorial
-def start_client(client_config: ClientConfig):
-
-    parse_args(client_config)
-
-    client = client_API.client_gRPC_API(client_config)
-  
-    client.open()
-
+def test_posting(client):
     print("Creating post...")
 
     response = client.postImage("fakeTitle","fakeText","NORMAL","http://")
@@ -66,6 +58,25 @@ def start_client(client_config: ClientConfig):
 
     print("Post 6 received: ")
     print(response)
+
+def test_commenting(client):
+    response = client.createComment("commenterUser", "test comment!!!", "NORMAL")
+
+    print("Comment 1 recieved")
+    print(response)
+
+# partial implementation from the official gRPC tutorial
+def start_client(client_config: ClientConfig):
+
+    parse_args(client_config)
+
+    client = client_API.client_gRPC_API(client_config)
+  
+    client.open()
+
+    # test_posting(client)
+
+    test_commenting(client)
 
     client.close()
 

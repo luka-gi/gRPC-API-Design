@@ -59,3 +59,29 @@ class DataBase():
             post["score"] = post["score"] - 1
 
         return post
+    
+    def getNewCommentID(self):
+        pre_increment = database_in_mem.CommentID
+
+        database_in_mem.CommentID = database_in_mem.CommentID + 1
+
+        return pre_increment
+    
+    def addNewComment(self, score, published, state, content, ID, author):
+        database_in_mem.Comments.append({
+            "score":score,
+            "published":published,
+            "state":state,
+            "content":content,
+            "ID":ID,
+            "author":author
+        })
+
+    def getComments(self):
+        return database_in_mem.Comments
+    
+    def getCommentByID(self, commentID):
+        for comment in database_in_mem.Comments:
+            if comment["ID"] is commentID:
+                return comment
+        return None
