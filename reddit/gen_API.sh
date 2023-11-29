@@ -1,4 +1,6 @@
 #!/bin/bash
 
-python -m grpc_tools.protoc -I. --python_out=client --pyi_out=client --grpc_python_out=client ./reddit.proto
-python -m grpc_tools.protoc -I. --python_out=server --pyi_out=server --grpc_python_out=server ./reddit.proto
+for file in client server
+do
+    python -m grpc_tools.protoc -I./protos --python_out=$file --grpc_python_out=$file ./protos/*.proto
+done
