@@ -18,6 +18,8 @@ class DB:
             "state": "NORMAL",
             "published": "11/28/2023",
             "ID": 0,
+            "type": "IMAGE",
+            "content": "http://kasjfdklsajfdlkj"
         },
         {
             "title": "testTitle2",
@@ -26,5 +28,7 @@ class DB:
             "state": "NORMAL",
             "published": "11/28/2023",
             "ID": 1,
+            "type": "VIDEO",
+            "content":["frame1","frame2","frame3"]
         },
     ]

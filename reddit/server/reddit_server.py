@@ -10,12 +10,19 @@ from datetime import datetime
 
 class Poster(reddit_pb2_grpc.PostServiceServicer):
 
-    class NewPostMetaData():
-        def __init__(self):
-            self.score = 0
-            self.published = datetime.today().strftime('%m/%d/%Y')
-            self.ID = DB.PostID
-            DB.PostID = DB.PostID + 1
+    def populatePostMetadata(self, request):
+        newImage = reddit_pb2.Post(
+            score=0,
+            published=datetime.today().strftime('%m/%d/%Y'),
+            ID=DB.PostID,
+            title=request.meta.title,
+            text=request.meta.text,
+            state=request.meta.state,
+        )
+
+        DB.PostID = DB.PostID + 1
+
+        return newImage
 
     def requestValidated(self,request):
         if not (request.meta.title and request.meta.text and request.meta.state):
@@ -30,32 +37,29 @@ class Poster(reddit_pb2_grpc.PostServiceServicer):
         if not request.image.url:
             return None
 
-        meta = self.NewPostMetaData()
-        meta.type = "IMAGE"
+        type = "IMAGE"
 
+        newImage = self.populatePostMetadata(request)
+
+        # populate image-specifics to post
+        newImage.type = type
+        newImage.image.CopyFrom(request.image)
+
+        # add to DB
+        # take enums from request
         DB.Posts.append({
-            "title": request.meta.title,
-            "text": request.meta.text,
-            "score": meta.score,
+            "title": newImage.title,
+            "text": newImage.text,
+            "score": newImage.score,
             "state": request.meta.state,
-            "published": meta.published,
-            "ID": meta.ID,
-            "type": meta.type,
-            "content": request.image.url,
+            "published": newImage.published,
+            "ID": newImage.ID,
+            "type": type,
+            "content": newImage.image.url,
         })
-
         print(DB.Posts)
 
-        return reddit_pb2.Post(
-            title=request.meta.title,
-            text=request.meta.text,
-            score=meta.score,
-            state=request.meta.state,
-            published=meta.published,
-            ID=meta.ID,
-            type=meta.type,
-            image=request.image,
-        )
+        return newImage
 
 # partial implementation from the official gRPC tutorial
 def serve():
