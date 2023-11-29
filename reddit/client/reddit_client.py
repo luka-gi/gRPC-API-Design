@@ -65,6 +65,16 @@ def test_commenting(client):
     print("Comment 1 recieved")
     print(response)
 
+    response = client.rateComment(0, "UPVOTE")
+
+    print("Comment 2 recieved")
+    print(response)
+
+    response = client.rateComment(1, "DOWNVOTE")
+
+    print("Comment 3 recieved")
+    print(response)
+
 # partial implementation from the official gRPC tutorial
 def start_client(client_config: ClientConfig):
 

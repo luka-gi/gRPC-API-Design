@@ -1,5 +1,6 @@
 import comment_pb2
 import comment_pb2_grpc
+import user_pb2
 
 from datetime import datetime
 
@@ -19,7 +20,7 @@ class Comment:
             self.state,
             self.content,
             self.ID,
-            self.author,
+            self.author.UID,
         )
 
 class Commenter(comment_pb2_grpc.CommentServiceServicer):
@@ -37,8 +38,6 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
         # add comment to DB
         NewComment.addNewCommentToDatabase(self.DBConn)
 
-        print(self.DBConn.getComments())
-
         return comment_pb2.NewCommentResponse(
             comment=comment_pb2.Comment(
                 score = NewComment.score,
@@ -49,3 +48,27 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
                 author = NewComment.author,
             )
         )
+    
+    def RateComment(self, request, contex):
+        if request.commentID == None:
+            return None
+        
+        comment = self.DBConn.rateComment(request.commentID, request.rating)
+
+        if not comment:
+            return None
+        
+        RateCommentResponse = comment_pb2.RateCommentResponse(
+            comment=comment_pb2.Comment(
+                score = comment["score"],
+                published = comment["published"],
+                content = comment["content"],
+                state = comment["state"],
+                ID = comment["ID"],
+                author = user_pb2.User(
+                    UID=comment["author"],
+                )
+            )
+        )
+
+        return RateCommentResponse

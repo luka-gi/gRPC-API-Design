@@ -77,3 +77,11 @@ class client_gRPC_API:
             state = state,
             content=content
         ))
+    
+    def rateComment(self, commentID, rating):
+        response = self.comment_service.RateComment(comment_pb2.RateCommentRequest(
+            commentID=commentID,
+            rating=rating
+        ))
+
+        return response

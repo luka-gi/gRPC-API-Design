@@ -28,6 +28,21 @@ message NewCommentResponse {
   optional Comment comment = 1;
 }
 
+message RateCommentRequest {
+  optional int64 commentID = 1;
+  optional string rating = 2;
+
+  enum Rating {
+    UPVOTE = 0;
+    DOWNVOTE = 1;
+  }
+}
+
+message RateCommentResponse {
+  optional Comment comment = 1;
+}
+
 service CommentService {
   rpc CreateComment (NewCommentRequest) returns (NewCommentResponse) {}
+  rpc RateComment (RateCommentRequest) returns (RateCommentResponse) {}
 }
