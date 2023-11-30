@@ -49,11 +49,12 @@ message GetNCommentsRequest {
 }
 
 message GetNCommentsResponse {
-  repeated Comment comment = 1;
+  optional Comment comment = 1;
+  optional Comment subcomment = 2;
 }
 
 service CommentService {
   rpc CreateComment (NewCommentRequest) returns (NewCommentResponse) {}
   rpc RateComment (RateCommentRequest) returns (RateCommentResponse) {}
-  rpc GetNComments (GetNCommentsRequest) returns (GetNCommentsResponse) {}
+  rpc GetNComments (GetNCommentsRequest) returns (stream GetNCommentsResponse) {}
 }

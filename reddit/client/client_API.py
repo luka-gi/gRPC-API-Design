@@ -92,7 +92,7 @@ class client_gRPC_API:
             num_comments=numComments
         ))
 
-        return response
+        return list(response)
     
     def getNCommentsFromPost(self, postID, numComments):
         response = self.post_service.GetNComments(post_pb2.GetNCommentsRequest(

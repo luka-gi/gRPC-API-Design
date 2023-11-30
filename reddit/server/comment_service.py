@@ -89,30 +89,29 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
             if i < request.num_comments:
                 sorted_subcomments = sorted(subcomment["comment"], key=lambda dict: -dict["score"])
 
+                yield comment_pb2.GetNCommentsResponse(
+                    comment=comment_pb2.Comment(
+                        score = subcomment["score"],
+                        published = subcomment["published"],
+                        content = subcomment["content"],
+                        state = subcomment["state"],
+                        ID = subcomment["ID"],
+                        author = user_pb2.User(
+                            UID=subcomment["author"],
+                        )   
+                ))
+
                 for j,subsubcomment in enumerate(sorted_subcomments):
                     if j < request.num_comments:
-                        comments.append(comment_pb2.Comment(
-                            score = subsubcomment["score"],
-                            published = subsubcomment["published"],
-                            content = subsubcomment["content"],
-                            state = subsubcomment["state"],
-                            ID = subsubcomment["ID"],
-                            author = user_pb2.User(
-                                UID=subsubcomment["author"],
-                            )   
+                        yield comment_pb2.GetNCommentsResponse(
+                            subcomment=comment_pb2.Comment(
+                                score = subsubcomment["score"],
+                                published = subsubcomment["published"],
+                                content = subsubcomment["content"],
+                                state = subsubcomment["state"],
+                                ID = subsubcomment["ID"],
+                                author = user_pb2.User(
+                                    UID=subsubcomment["author"],
+                                )   
                         ))
 
-                comments.append(comment_pb2.Comment(
-                    score = subcomment["score"],
-                    published = subcomment["published"],
-                    content = subcomment["content"],
-                    state = subcomment["state"],
-                    ID = subcomment["ID"],
-                    author = user_pb2.User(
-                        UID=subcomment["author"],
-                    )   
-                ))
-        
-        return comment_pb2.GetNCommentsResponse(
-            comment=comments
-        )
