@@ -8,7 +8,7 @@ class database_in_mem:
         }
     ]
 
-    CommentID = 1
+    CommentID = 9
 
     Comments = [
         {
@@ -17,7 +17,83 @@ class database_in_mem:
             "author": "testuser",
             "state": "NORMAL",
             "published": "11/30/23",
-            "content": "example comments"
+            "content": "example comments",
+            "comment": [
+                {
+                    "ID": 1,
+                    "score": 9,
+                    "author": "testuser",
+                    "state": "NORMAL",
+                    "published": "11/30/23",
+                    "content": "example comments",
+                    "comment":[
+                        {
+                            "ID": 2,
+                            "score": 39,
+                            "author": "testuser",
+                            "state": "NORMAL",
+                            "published": "11/30/23",
+                            "content": "example comments",
+                            "comment":[
+                                {
+                                    "ID": 3,
+                                    "score": 3,
+                                    "author": "testuser",
+                                    "state": "NORMAL",
+                                    "published": "11/30/23",
+                                    "content": "example comments",
+                                    "comment":[]
+                                }
+                            ]
+                        },
+                        {
+                            "ID": 7,
+                            "score": -19,
+                            "author": "testuser",
+                            "state": "NORMAL",
+                            "published": "11/30/23",
+                            "content": "example comments",
+                            "comment":[]
+                        },
+                        {
+                            "ID": 8,
+                            "score": -7,
+                            "author": "testuser",
+                            "state": "NORMAL",
+                            "published": "11/30/23",
+                            "content": "example comments",
+                            "comment":[]
+                        }
+                    ]
+                },
+                {
+                    "ID": 4,
+                    "score": -3,
+                    "author": "testuser",
+                    "state": "NORMAL",
+                    "published": "11/30/23",
+                    "content": "example comments",
+                    "comment": []
+                },
+                {
+                    "ID": 5,
+                    "score": 4,
+                    "author": "testuser",
+                    "state": "NORMAL",
+                    "published": "11/30/23",
+                    "content": "example comments",
+                    "comment": []
+                },
+            ]
+        },
+        {
+            "ID": 6,
+            "score": 3,
+            "author": "testuser",
+            "state": "NORMAL",
+            "published": "11/30/23",
+            "content": "example comments",
+            "comment": []
         }
     ]
 

@@ -70,9 +70,14 @@ def test_commenting(client):
     print("Comment 2 recieved")
     print(response)
 
-    response = client.rateComment(1, "DOWNVOTE")
+    response = client.rateComment(6, "DOWNVOTE")
 
     print("Comment 3 recieved")
+    print(response)
+
+    response = client.getNComments(0, 2)
+
+    print("\n\n\n\nComment 4 recieved")
     print(response)
 
 # partial implementation from the official gRPC tutorial

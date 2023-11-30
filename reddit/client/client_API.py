@@ -85,3 +85,11 @@ class client_gRPC_API:
         ))
 
         return response
+    
+    def getNComments(self, commentID, numComments):
+        response = self.comment_service.GetNComments(comment_pb2.GetNCommentsRequest(
+            commentID=commentID,
+            num_comments=numComments
+        ))
+
+        return response

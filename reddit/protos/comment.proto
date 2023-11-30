@@ -11,6 +11,7 @@ message Comment {
   optional string published = 4;
   optional string content = 5;
   optional int64 ID = 6;
+  repeated Comment comment = 7;
 
   enum CommentState {
     NORMAL = 0;
@@ -42,7 +43,17 @@ message RateCommentResponse {
   optional Comment comment = 1;
 }
 
+message GetNCommentsRequest {
+  optional int32 num_comments = 1;
+  optional int64 commentID = 2;
+}
+
+message GetNCommentsResponse {
+  repeated Comment comment = 1;
+}
+
 service CommentService {
   rpc CreateComment (NewCommentRequest) returns (NewCommentResponse) {}
   rpc RateComment (RateCommentRequest) returns (RateCommentResponse) {}
+  rpc GetNComments (GetNCommentsRequest) returns (GetNCommentsResponse) {}
 }
