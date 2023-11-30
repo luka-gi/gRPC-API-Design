@@ -50,11 +50,12 @@ class client_gRPC_API:
         response_list = list(response)
 
         type = response_list[0].type
+        content_list = response_list[1:]
 
         if type == post_pb2.PostMeta(type="IMAGE").type:
-            return response_list[1].imageurl
+            return content_list[0].imageurl
         elif type == post_pb2.PostMeta(type="VIDEO").type:
-            return response_list[1].videoframes
+            return [content_list[x].videoframe for x in range(len(content_list))]
         else:
             return None
         

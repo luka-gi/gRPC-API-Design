@@ -152,9 +152,10 @@ class Poster(post_pb2_grpc.PostServiceServicer):
                 imageurl=post["content"]
             )
         elif post["type"] == "VIDEO":
-             yield post_pb2.GetPostContentResponse(
-                videoframes=post["content"]
-            )           
+            for frame in post["content"]:
+                yield post_pb2.GetPostContentResponse(
+                    videoframe=frame
+                )       
         else:
             return None
         
