@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package reddit.post;
 
+import "comment.proto";
+
 message Image {
   optional string url = 1;
 }
@@ -18,6 +20,7 @@ message PostMeta {
   optional string published = 5;
   optional int64 ID = 6;
   optional ContentType type = 9;
+  optional comment.Comment comment = 10; 
 
   enum ContentType {
     IMAGE = 0;
@@ -81,9 +84,19 @@ message RatePostResponse {
   optional PostMeta meta = 1;
 }
 
+message GetNCommentsRequest {
+  optional int32 num_comments = 1;
+  optional int64 postID = 2;
+}
+
+message GetNCommentsResponse {
+  repeated comment.Comment comment = 1;
+}
+
 service PostService {
   rpc PostImage (NewImagePostRequest) returns (ImagePostResponse) {}
   rpc PostVideo (NewVideoPostRequest) returns (VideoPostResponse) {}
   rpc GetPostContent (GetPostContentRequest) returns (stream GetPostContentResponse) {}
   rpc RatePost (RatePostRequest) returns (RatePostResponse) {}
+  rpc GetNComments (GetNCommentsRequest) returns (GetNCommentsResponse) {}
 }

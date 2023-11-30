@@ -70,7 +70,7 @@ def test_commenting(client):
     print("Comment 2 recieved")
     print(response)
 
-    response = client.rateComment(6, "DOWNVOTE")
+    response = client.rateComment(10, "DOWNVOTE")
 
     print("Comment 3 recieved")
     print(response)

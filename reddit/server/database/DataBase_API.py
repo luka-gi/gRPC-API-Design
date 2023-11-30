@@ -89,6 +89,9 @@ class DataBase():
     def rateComment(self, commentID, rating):
         comment = self.getCommentByID(commentID)
 
+        if not comment:
+            return None
+
         if(rating == "UPVOTE"):
             comment["score"] = comment["score"] + 1
         elif(rating == "DOWNVOTE"):

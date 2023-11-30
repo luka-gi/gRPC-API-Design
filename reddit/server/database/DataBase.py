@@ -8,7 +8,7 @@ class database_in_mem:
         }
     ]
 
-    CommentID = 9
+    CommentID = 12
 
     Comments = [
         {
@@ -87,7 +87,25 @@ class database_in_mem:
             ]
         },
         {
-            "ID": 6,
+            "ID": 9,
+            "score": 3,
+            "author": "testuser",
+            "state": "NORMAL",
+            "published": "11/30/23",
+            "content": "example comments",
+            "comment": []
+        },
+        {
+            "ID": 10,
+            "score": 3,
+            "author": "testuser",
+            "state": "NORMAL",
+            "published": "11/30/23",
+            "content": "example comments",
+            "comment": []
+        },
+        {
+            "ID": 11,
             "score": 3,
             "author": "testuser",
             "state": "NORMAL",
@@ -108,7 +126,8 @@ class database_in_mem:
             "published": "11/28/2023",
             "ID": 0,
             "type": "IMAGE",
-            "content": "http://kasjfdklsajfdlkj"
+            "content": "http://kasjfdklsajfdlkj",
+            "comment": [Comments[0],Comments[1],Comments[2]]
         },
         {
             "title": "testTitle2",
@@ -118,6 +137,7 @@ class database_in_mem:
             "published": "11/28/2023",
             "ID": 1,
             "type": "VIDEO",
-            "content":["frame1","frame2","frame3"]
+            "content":["frame1","frame2","frame3"],
+            "comment": [Comments[3]]
         },
     ]
