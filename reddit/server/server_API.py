@@ -27,4 +27,7 @@ class server_gRPC_API:
         self.server.start()
 
     def listen_and_serve(self):
-        self.server.wait_for_termination()
+        try:
+            self.server.wait_for_termination()
+        except KeyboardInterrupt:
+            print("\nterminating server")
