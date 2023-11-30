@@ -1,4 +1,6 @@
 import post_pb2
+import comment_pb2
+import user_pb2
 import post_pb2_grpc
 
 from datetime import datetime
@@ -177,3 +179,34 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         )
 
         return RatePostResponse
+
+    def GetNComments(self, request, context):
+
+        if request.postID == None:
+            return None
+        
+        post = self.DBConn.getPostByID(request.postID)
+
+        if not post:
+            return None
+
+        sorted_comments = sorted(post["comment"], key=lambda dict: -dict["score"])
+
+        for i,comment in enumerate(sorted_comments):
+            if i < request.num_comments:
+
+                has_replies = (len(comment["comment"]) != 0)
+
+                yield post_pb2.GetNCommentsResponse(
+                    comment=comment_pb2.Comment(
+                        score = comment["score"],
+                        published = comment["published"],
+                        content = comment["content"],
+                        state = comment["state"],
+                        ID = comment["ID"],
+                        author = user_pb2.User(
+                            UID=comment["author"],
+                        ),
+                    ),
+                    has_replies=has_replies
+                )

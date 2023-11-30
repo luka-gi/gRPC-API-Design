@@ -30,7 +30,6 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
         self.DBConn = DBConn
 
     def CreateComment(self, request, context):
-        print(request)
 
         # parse request
         NewComment = Comment(self.DBConn,request)
