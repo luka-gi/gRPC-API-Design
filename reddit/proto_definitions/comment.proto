@@ -43,6 +43,14 @@ message RateCommentResponse {
   optional Comment comment = 1;
 }
 
+message GetCommentRequest{
+  optional int64 commentID = 1;
+}
+
+message GetCommentResponse{
+  optional Comment comment = 1;
+}
+
 message GetNCommentsRequest {
   optional int32 num_comments = 1;
   optional int64 commentID = 2;
@@ -56,5 +64,6 @@ message GetNCommentsResponse {
 service CommentService {
   rpc CreateComment (NewCommentRequest) returns (NewCommentResponse) {}
   rpc RateComment (RateCommentRequest) returns (RateCommentResponse) {}
+  rpc GetComment (GetCommentRequest) returns (GetCommentResponse) {}
   rpc GetNComments (GetNCommentsRequest) returns (stream GetNCommentsResponse) {}
 }

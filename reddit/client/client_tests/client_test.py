@@ -49,6 +49,13 @@ def test_posting(client):
     print("Post 7 recieved")
     print(response)
 
+    print("\n\n")
+    print("test get a post from the ID\n")
+    response = client.getPostMeta(0)
+
+    print("Post 8 recieved")
+    print(response)
+
 def test_commenting(client):
 
     print("\n\n")
@@ -77,6 +84,13 @@ def test_commenting(client):
     response = client.getNCommentsFromComment(0, 2)
 
     print("Comment 4 recieved")
+    print(response)
+
+    print("\n\n")
+    print("test get a comments from the ID\n")
+    response = client.getComment(0)
+
+    print("Comment 5 recieved")
     print(response)
 
 class client_test:

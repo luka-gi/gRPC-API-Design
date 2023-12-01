@@ -84,6 +84,14 @@ message RatePostResponse {
   optional PostMeta meta = 1;
 }
 
+message GetPostMetaRequest {
+  optional int64 postID = 1;
+}
+
+message GetPostMetaResponse {
+  optional PostMeta meta = 1;
+}
+
 message GetNCommentsRequest {
   optional int32 num_comments = 1;
   optional int64 postID = 2;
@@ -99,5 +107,6 @@ service PostService {
   rpc PostVideo (NewVideoPostRequest) returns (VideoPostResponse) {}
   rpc GetPostContent (GetPostContentRequest) returns (stream GetPostContentResponse) {}
   rpc RatePost (RatePostRequest) returns (RatePostResponse) {}
+  rpc GetPost (GetPostMetaRequest) returns (GetPostMetaResponse) {}
   rpc GetNComments (GetNCommentsRequest) returns (stream GetNCommentsResponse) {}
 }

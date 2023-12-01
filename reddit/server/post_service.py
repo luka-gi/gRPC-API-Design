@@ -180,6 +180,29 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         )
 
         return RatePostResponse
+    
+    def GetPost(self, request, context):
+
+        if request.postID == None:
+            return None
+        # add comment to DB
+        post = self.DBConn.getPostByID(request.postID)
+
+        if not post:
+            return None
+
+        GetPostMetaResponse = post_pb2.GetPostMetaResponse(
+            meta=post_pb2.PostMeta(
+                title = post["title"],
+                text = post["text"],
+                state = post["state"],
+                published = post["published"],
+                score = post["score"],
+                ID = post["ID"]
+            )
+        )
+
+        return GetPostMetaResponse
 
     def GetNComments(self, request, context):
 

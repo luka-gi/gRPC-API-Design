@@ -73,6 +73,23 @@ class client_gRPC_API:
 
         return responseToDict
     
+    def getPostMeta(self, postID):
+        response = self.post_service.GetPost(post_pb2.GetPostMetaRequest(
+            postID=postID
+        ))
+
+        responseToDict = {
+            "title":response.meta.title,
+            "text":response.meta.text,
+            "score":response.meta.score,
+            "state":response.meta.state,
+            "published":response.meta.published,
+            "ID":response.meta.ID,
+            "type":response.meta.type,
+        }
+
+        return responseToDict
+    
     def getPostContent(self, postID):
         response = self.post_service.GetPostContent(post_pb2.GetPostContentRequest(
             postID=postID
@@ -129,6 +146,22 @@ class client_gRPC_API:
         ))
 
         return response.comment.score
+    
+    def getComment(self, commentID):
+        response = self.comment_service.GetComment(comment_pb2.GetCommentRequest(
+            commentID=commentID
+        ))
+    
+        responseToDict = {
+            "author":response.comment.author.UID,
+            "score":response.comment.score,
+            "state":response.comment.state,
+            "published":response.comment.published,
+            "content":response.comment.content,
+            "ID":response.comment.ID,
+        }
+
+        return responseToDict
     
     def getNCommentsFromComment(self, commentID, numComments):
         responses = self.comment_service.GetNComments(comment_pb2.GetNCommentsRequest(

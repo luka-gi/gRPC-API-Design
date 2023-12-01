@@ -72,6 +72,31 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
 
         return RateCommentResponse
     
+    def GetComment(self, request, context):
+
+        if request.commentID == None:
+            return None
+        # add comment to DB
+        comment = self.DBConn.getCommentByID(request.commentID)
+
+        if not comment:
+            return None
+
+        GetCommentResponse = comment_pb2.GetCommentResponse(
+            comment=comment_pb2.Comment(
+                score = comment["score"],
+                published = comment["published"],
+                content = comment["content"],
+                state = comment["state"],
+                ID = comment["ID"],
+                author = user_pb2.User(
+                    UID=comment["author"],
+                )
+            )
+        )
+
+        return GetCommentResponse
+    
     def GetNComments(self, request, context):
         if request.commentID == None:
             return None
