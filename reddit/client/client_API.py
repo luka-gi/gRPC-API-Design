@@ -91,17 +91,62 @@ class client_gRPC_API:
         return response
     
     def getNCommentsFromComment(self, commentID, numComments):
-        response = self.comment_service.GetNComments(comment_pb2.GetNCommentsRequest(
+        responses = self.comment_service.GetNComments(comment_pb2.GetNCommentsRequest(
             commentID=commentID,
             num_comments=numComments
         ))
 
-        return list(response)
+        toReturn = []
+        responses = list(responses)
+
+        for response in responses:
+            comment_object = {}
+
+            if response.comment != comment_pb2.Comment():
+                comment_object["author"] = response.comment.author.UID
+                comment_object["score"] = response.comment.score
+                comment_object["state"] = response.comment.state
+                comment_object["published"] = response.comment.published
+                comment_object["content"] = response.comment.content
+                comment_object["ID"] = response.comment.ID
+                comment_object["comment"] = []
+
+                toReturn.append(comment_object)
+
+            if response.subcomment != comment_pb2.Comment():
+                comment_object["author"] = response.subcomment.author.UID
+                comment_object["score"] = response.subcomment.score
+                comment_object["state"] = response.subcomment.state
+                comment_object["published"] = response.subcomment.published
+                comment_object["content"] = response.subcomment.content
+                comment_object["ID"] = response.subcomment.ID
+                comment_object["comment"] = []
+
+                toReturn[-1]["comment"].append(comment_object)
+
+        return toReturn
     
     def getNCommentsFromPost(self, postID, numComments):
-        response = self.post_service.GetNComments(post_pb2.GetNCommentsRequest(
+        responses = self.post_service.GetNComments(post_pb2.GetNCommentsRequest(
             postID=postID,
             num_comments=numComments
         ))
 
-        return list(response)
+        toReturn = []
+
+        for response in list(responses):
+            comment_object = {}
+            print("PRINT")
+            print(response)
+            
+            comment_object["author"] = response.comment.author.UID
+            comment_object["score"] = response.comment.score
+            comment_object["state"] = response.comment.state
+            comment_object["published"] = response.comment.published
+            comment_object["content"] = response.comment.content
+            comment_object["ID"] = response.comment.ID
+            comment_object["has_replies"] = response.has_replies
+
+            toReturn.append(comment_object)
+
+        return toReturn
