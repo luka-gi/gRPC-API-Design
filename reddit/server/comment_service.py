@@ -1,6 +1,6 @@
-import comment_pb2
-import comment_pb2_grpc
-import user_pb2
+from protos import comment_pb2
+from protos import comment_pb2_grpc
+from protos import user_pb2
 
 from datetime import datetime
 

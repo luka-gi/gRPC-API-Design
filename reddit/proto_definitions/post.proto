@@ -20,7 +20,7 @@ message PostMeta {
   optional string published = 5;
   optional int64 ID = 6;
   optional ContentType type = 9;
-  optional comment.Comment comment = 10; 
+  repeated comment.Comment comment = 10; 
 
   enum ContentType {
     IMAGE = 0;

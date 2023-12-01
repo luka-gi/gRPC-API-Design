@@ -26,7 +26,7 @@ class client_gRPC_API:
         self.comment_service = comment_pb2_grpc.CommentServiceStub(self.channel)
 
     def postImage(self, title, text, state, image_url):
-        return self.post_service.PostImage(post_pb2.NewImagePostRequest(
+        response = self.post_service.PostImage(post_pb2.NewImagePostRequest(
             meta=post_pb2.NewPostMeta(
                 title=title,
                 text=text,
@@ -34,9 +34,23 @@ class client_gRPC_API:
             ),
             image=post_pb2.Image(url=image_url)
         ))
+
+        responseToDict = {
+            "title":response.meta.title,
+            "text":response.meta.text,
+            "score":response.meta.score,
+            "state":response.meta.state,
+            "published":response.meta.published,
+            "ID":response.meta.ID,
+            "type":response.meta.type,
+            "comment":response.meta.comment,
+            "content":response.image.url,
+        }
+
+        return responseToDict
     
     def postVideo(self, title, text, state, video_frames):
-        return self.post_service.PostVideo(post_pb2.NewVideoPostRequest(
+        response = self.post_service.PostVideo(post_pb2.NewVideoPostRequest(
             meta=post_pb2.NewPostMeta(
                 title=title,
                 text=text,
@@ -44,6 +58,20 @@ class client_gRPC_API:
             ),
             video=post_pb2.Video(frames=video_frames)
         ))
+    
+        responseToDict = {
+            "title":response.meta.title,
+            "text":response.meta.text,
+            "score":response.meta.score,
+            "state":response.meta.state,
+            "published":response.meta.published,
+            "ID":response.meta.ID,
+            "type":response.meta.type,
+            "comment":response.meta.comment,
+            "content":response.video.frames,
+        }
+
+        return responseToDict
     
     def getPostContent(self, postID):
         response = self.post_service.GetPostContent(post_pb2.GetPostContentRequest(
@@ -68,13 +96,13 @@ class client_gRPC_API:
             rating=rating
         ))
 
-        return response
+        return response.meta.score
 
     def close(self):
         self.channel.close()
 
     def createComment(self, userID, content, state):
-        return self.comment_service.CreateComment(comment_pb2.NewCommentRequest(
+        response = self.comment_service.CreateComment(comment_pb2.NewCommentRequest(
             author=user_pb2.User(
                 UID = userID
             ),
@@ -82,13 +110,25 @@ class client_gRPC_API:
             content=content
         ))
     
+        responseToDict = {
+            "author":response.comment.author.UID,
+            "score":response.comment.score,
+            "state":response.comment.state,
+            "published":response.comment.published,
+            "content":response.comment.content,
+            "ID":response.comment.ID,
+            "comment":response.comment.comment,
+        }
+
+        return responseToDict
+    
     def rateComment(self, commentID, rating):
         response = self.comment_service.RateComment(comment_pb2.RateCommentRequest(
             commentID=commentID,
             rating=rating
         ))
 
-        return response
+        return response.comment.score
     
     def getNCommentsFromComment(self, commentID, numComments):
         responses = self.comment_service.GetNComments(comment_pb2.GetNCommentsRequest(
@@ -136,8 +176,6 @@ class client_gRPC_API:
 
         for response in list(responses):
             comment_object = {}
-            print("PRINT")
-            print(response)
             
             comment_object["author"] = response.comment.author.UID
             comment_object["score"] = response.comment.score
