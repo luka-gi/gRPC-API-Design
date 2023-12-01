@@ -1,9 +1,12 @@
 from concurrent import futures
 
+import sys
 import grpc
-import post_pb2_grpc
+
+sys.path.append("protos")
+from protos import post_pb2_grpc
 import post_service
-import comment_pb2_grpc
+from protos import comment_pb2_grpc
 import comment_service
 
 from database.DataBase_API import DataBase

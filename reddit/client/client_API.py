@@ -1,9 +1,12 @@
 import grpc
-import post_pb2_grpc
-import post_pb2
-import comment_pb2_grpc
-import comment_pb2
-import user_pb2
+import sys
+
+sys.path.append("protos")
+from protos import post_pb2_grpc
+from protos import post_pb2
+from protos import comment_pb2_grpc
+from protos import comment_pb2
+from protos import user_pb2
 
 class client_gRPC_API:
 
