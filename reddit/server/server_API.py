@@ -9,13 +9,11 @@ import post_service
 from protos import comment_pb2_grpc
 import comment_service
 
-from database.DataBase_API import DataBase
-
 class server_gRPC_API:
 
-    def __init__(self,client_config):
+    def __init__(self,client_config, database):
         self.port = client_config.port
-        self.DB = DataBase()
+        self.DB = database
         self.DBConn = self.DB.connect()
         self.server = None
 
@@ -28,6 +26,9 @@ class server_gRPC_API:
         self.server.add_insecure_port("[::]:" + self.port)
 
         self.server.start()
+
+    def stop(self):
+        self.server.stop(None)
 
     def listen_and_serve(self):
         try:

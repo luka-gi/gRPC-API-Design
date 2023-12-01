@@ -3,6 +3,7 @@ import logging
 import argparse
 
 import server_API
+from database.DataBase_API import DataBase
 
 class ServerConfig():
     def __init__(self):
@@ -20,10 +21,10 @@ def parse_args(server_config: ServerConfig):
     server_config.port = args.port
 
 # partial implementation from the official gRPC tutorial
-def serve(server_config: ServerConfig):
+def serve(server_config: ServerConfig, database: DataBase):
     parse_args(server_config)
 
-    server = server_API.server_gRPC_API(server_config)
+    server = server_API.server_gRPC_API(server_config, database)
   
     server.start()
 
@@ -34,4 +35,4 @@ def serve(server_config: ServerConfig):
 
 if __name__ == "__main__":
     logging.basicConfig()
-    serve(ServerConfig())
+    serve(ServerConfig(), DataBase())
