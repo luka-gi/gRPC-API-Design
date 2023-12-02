@@ -8,6 +8,8 @@ It runs ```./gen_API.sh``` which remakes the protos in the necessary `client` an
 
 ## Start
 
+Don't forget to source the python environment: `source venv/bin/activate`
+
 In one terminal, change directories to `server` and run ```python reddit_server.py```.
 
 In another terminal, change directories to `client` and run ```python reddit_client.py```. This sends a pre-defined request to the server.
