@@ -36,17 +36,24 @@ def parse_args(client_config: ClientConfig):
 # partial implementation from the official gRPC tutorial
 def start_client(client_config: ClientConfig):
 
+    #parse commmand line arguments and update the config
     parse_args(client_config)
 
+    # create a client object based on the API
     client = client_API.client_gRPC_API(client_config)
   
+    # open the channel to the server
     client.open()
 
+    # if -t is passed, run the basic tests i used during implementation
     if client_config.test:
         client_test.run(client)
 
-    # put client requests here
+    """
+    put client requests here
+    """
 
+    #close the channel to the server
     client.close()
 
 if __name__ == "__main__":

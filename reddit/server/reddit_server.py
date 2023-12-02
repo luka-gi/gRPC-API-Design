@@ -22,14 +22,19 @@ def parse_args(server_config: ServerConfig):
 
 # partial implementation from the official gRPC tutorial
 def serve(server_config: ServerConfig, database: DataBase):
+
+    # parse command line arguments
     parse_args(server_config)
 
+    # create a server based on the API
     server = server_API.server_gRPC_API(server_config, database)
   
+    #start the server
     server.start()
 
     print("Server started, listening on " + server_config.port)
 
+    # poll and create threads until Ctrl+C
     server.listen_and_serve()
 
 

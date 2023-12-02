@@ -1,3 +1,7 @@
+"""
+implemented API used for abstracting the DB implementation from the requested/returned data
+as well as how to change or add the items in the database 
+"""
 from database.DataBase import database_in_mem
 
 class DataBase():

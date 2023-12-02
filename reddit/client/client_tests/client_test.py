@@ -1,3 +1,8 @@
+"""
+simply a list of all available services and their different options
+testing if their happy paths work (i.e., do they send readable data)
+"""
+
 def test_posting(client):
 
     print("\n\n")

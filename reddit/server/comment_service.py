@@ -5,6 +5,9 @@ from protos import user_pb2
 from datetime import datetime
 
 class Comment:
+    """
+    comment object to make creation less messy
+    """
     def __init__(self,DBConn,request):
         self.score = 0
         self.published=datetime.today().strftime('%m/%d/%Y')
@@ -52,11 +55,13 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
         if request.commentID == None:
             return comment_pb2.RateCommentResponse()
         
+        # rate comment in DB and return the object
         comment = self.DBConn.rateComment(request.commentID, request.rating)
 
         if not comment:
             return comment_pb2.RateCommentResponse()
         
+        # prepare metadata response to send back to user
         RateCommentResponse = comment_pb2.RateCommentResponse(
             comment=comment_pb2.Comment(
                 score = comment["score"],
@@ -76,12 +81,13 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
 
         if request.commentID == None:
             return comment_pb2.GetCommentResponse()
-        # add comment to DB
+        # get post ID from DB
         comment = self.DBConn.getCommentByID(request.commentID)
 
         if not comment:
             return comment_pb2.GetCommentResponse()
 
+        # send comment response
         GetCommentResponse = comment_pb2.GetCommentResponse(
             comment=comment_pb2.Comment(
                 score = comment["score"],
@@ -101,6 +107,7 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
         if request.commentID == None:
             return comment_pb2.GetNCommentsResponse()
         
+        # get comment by ID from DB
         comment = self.DBConn.getCommentByID(request.commentID)
 
         if not comment:
@@ -108,12 +115,18 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
         
         comments = []
 
+        # sort its replies by order of score
         sorted_comments = sorted(comment["comment"], key=lambda dict: -dict["score"])
 
+        # enumerate all comments starting from highest score
         for i,subcomment in enumerate(sorted_comments):
+            # while less than the requested number of comments
             if i < request.num_comments:
+
+                # sort the replies' subcomments by order of score
                 sorted_subcomments = sorted(subcomment["comment"], key=lambda dict: -dict["score"])
 
+                # send each reply one by one
                 yield comment_pb2.GetNCommentsResponse(
                     comment=comment_pb2.Comment(
                         score = subcomment["score"],
@@ -126,8 +139,16 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
                         )   
                 ))
 
+                """
+                AFTER sending the reply, send its N most upvoted subcomments:
+                """
+
+                # enumerate all comments starting from highest score
                 for j,subsubcomment in enumerate(sorted_subcomments):
+                    # while less than the requested number of comments
                     if j < request.num_comments:
+
+                        # send each subcomment one by one
                         yield comment_pb2.GetNCommentsResponse(
                             subcomment=comment_pb2.Comment(
                                 score = subsubcomment["score"],
@@ -139,4 +160,10 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
                                     UID=subsubcomment["author"],
                                 )   
                         ))
+                    else:
+                        # break loop after N subcomments
+                        break
+            else:
+                # break loop after N comments
+                break
 
