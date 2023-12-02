@@ -7,6 +7,9 @@ from protos import subreddit_pb2
 from datetime import datetime
 
 class Post:
+    """
+    post object representing the common metadata between posts and videos
+    """
     def __init__(self,DBConn,request):
         self.score = 0
         self.published=datetime.today().strftime('%m/%d/%Y')
@@ -39,6 +42,11 @@ class Post:
             )
 
 class Image(Post):
+    """
+    image-specific class
+
+    handles parsing database response and converting to a gRPC response
+    """
     def __init__(self, DBConn, request):
         super().__init__(DBConn, request)
         self.type = "IMAGE"
@@ -75,6 +83,11 @@ class Image(Post):
         )
     
 class Video(Post):
+    """
+    video-specific class
+
+    handles parsing database response and converting to a gRPC response
+    """
     def __init__(self, DBConn, request):
         super().__init__(DBConn, request)
         self.type = "VIDEO"
@@ -156,20 +169,25 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         if request.postID == None:
             return post_pb2.GetPostContentResponse()
         
+        # get post from DB
         post = self.DBConn.getPostByID(request.postID)
 
         if not post:
             return post_pb2.GetPostContentResponse()
         
+        # first request is a type
         yield post_pb2.GetPostContentResponse(
             type=post["type"]
         )
 
+        # further requests, send contents
         if post["type"] == "IMAGE":
+            # one yield, return image url if image
             yield post_pb2.GetPostContentResponse(
                 imageurl=post["content"]
             )
         elif post["type"] == "VIDEO":
+            # if video, encapsulate each of videos frames in response
             for frame in post["content"]:
                 yield post_pb2.GetPostContentResponse(
                     videoframe=frame
@@ -181,11 +199,13 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         if request.postID == None:
             return post_pb2.RatePostResponse()
         
+        # get post from DB after changing the rating (upvote or downvote)
         post = self.DBConn.ratePost(request.postID, request.rating)
 
         if not post:
             return post_pb2.RatePostResponse()
         
+        # prepare metadata response to send back to user
         RatePostResponse = post_pb2.RatePostResponse(
             meta=post_pb2.PostMeta(
                 title = post["title"],
@@ -205,12 +225,14 @@ class Poster(post_pb2_grpc.PostServiceServicer):
 
         if request.postID == None:
             return post_pb2.GetPostMetaResponse()
-        # add comment to DB
+        
+        # get post by ID from DB
         post = self.DBConn.getPostByID(request.postID)
 
         if not post:
             return post_pb2.GetPostMetaResponse()
 
+        # send post metadata response
         GetPostMetaResponse = post_pb2.GetPostMetaResponse(
             meta=post_pb2.PostMeta(
                 title = post["title"],
@@ -235,18 +257,24 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         if request.postID == None:
             return post_pb2.GetNCommentsResponse()
         
+        # get post by ID from DB
         post = self.DBConn.getPostByID(request.postID)
 
         if not post:
             return post_pb2.GetNCommentsResponse()
 
+        # sort the comments by order of score
         sorted_comments = sorted(post["comment"], key=lambda dict: -dict["score"])
 
+        # enumerate all of the elements starting from highest score
         for i,comment in enumerate(sorted_comments):
+            # while less than the requested number of comments
             if i < request.num_comments:
 
+                # determine if comment has replies underneath it
                 has_replies = (len(comment["comment"]) != 0)
 
+                # send each comment one by one
                 yield post_pb2.GetNCommentsResponse(
                     comment=comment_pb2.Comment(
                         score = comment["score"],
@@ -260,3 +288,6 @@ class Poster(post_pb2_grpc.PostServiceServicer):
                     ),
                     has_replies=has_replies
                 )
+            else:
+                # break loop after N comments
+                break

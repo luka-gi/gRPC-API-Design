@@ -4,6 +4,7 @@ package reddit.comment;
 
 import "user.proto";
 
+// Objects
 message Comment {
   optional user.User author = 1;
   optional int32 score = 2;
@@ -19,6 +20,7 @@ message Comment {
   }
 }
 
+// Requests/responses
 message NewCommentRequest {
   optional user.User author = 1;
   optional Comment.CommentState state = 2;
@@ -61,9 +63,14 @@ message GetNCommentsResponse {
   optional Comment subcomment = 2;
 }
 
+//services
 service CommentService {
+  // send an author, text, and initial state and return the new object
   rpc CreateComment (NewCommentRequest) returns (NewCommentResponse) {}
+  // send a comment ID and a rating, get the new rating back
   rpc RateComment (RateCommentRequest) returns (RateCommentResponse) {}
+  // send a post id, and get its metadata back
   rpc GetComment (GetCommentRequest) returns (GetCommentResponse) {}
+  // send comment ID and number of comments to get from it and get N most upvoted comments underneath
   rpc GetNComments (GetNCommentsRequest) returns (stream GetNCommentsResponse) {}
 }

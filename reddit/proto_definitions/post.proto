@@ -5,6 +5,7 @@ package reddit.post;
 import "comment.proto";
 import "subreddit.proto";
 
+//objects
 message Image {
   optional string url = 1;
 }
@@ -37,6 +38,8 @@ message PostMeta {
   }
 }
 
+
+// requests/responses
 message ImagePostResponse {
   PostMeta meta = 1;
   Image image = 2;
@@ -107,11 +110,18 @@ message GetNCommentsResponse {
   optional bool has_replies = 2;
 }
 
+// services
 service PostService {
+  // send a title, a description, an initial state, and an image to be uploaded
   rpc PostImage (NewImagePostRequest) returns (ImagePostResponse) {}
+  // send a title, a description, an initial state, and a video to be uploaded
   rpc PostVideo (NewVideoPostRequest) returns (VideoPostResponse) {}
+  // send a post's id, get its content back
   rpc GetPostContent (GetPostContentRequest) returns (stream GetPostContentResponse) {}
+  // send a post ID and a rating, get the new rating back with extraneous metadata
   rpc RatePost (RatePostRequest) returns (RatePostResponse) {}
+  // send a post id, and get its metadata back
   rpc GetPost (GetPostMetaRequest) returns (GetPostMetaResponse) {}
+  // send post ID and number of comments to get from it and get N most upvoted comments from it
   rpc GetNComments (GetNCommentsRequest) returns (stream GetNCommentsResponse) {}
 }

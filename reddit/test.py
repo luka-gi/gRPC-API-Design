@@ -56,6 +56,9 @@ class TestSuiteGetMostUpvotedReply(unittest.TestCase):
             },
         ]
 
+    """
+    positive test: a happy path combination where the most upvoted reply is returned
+    """
     def test_suite_get_most_upvoted_reply_combo_1(self):
         expected = {
                 "ID":35,
@@ -114,6 +117,10 @@ class TestSuiteGetMostUpvotedReply(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    """
+    positive test: another happy path combination where the most upvoted reply
+    is returned (different score and section in the array)
+    """
     def test_suite_get_most_upvoted_reply_combo_2(self):
         expected = {
                 "ID":40,
@@ -186,6 +193,9 @@ class TestSuiteGetMostUpvotedReply(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    """
+    if post metadata does not exist, function should gracefully return null
+    """
     def test_suite_get_most_upvoted_reply_no_post_meta(self):
         expected = None
 
@@ -244,6 +254,9 @@ class TestSuiteGetMostUpvotedReply(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    """
+    if post content does not exist, function should gracefully return null
+    """
     def test_suite_get_most_upvoted_reply_no_post_content(self):
         expected = None
 
@@ -302,6 +315,9 @@ class TestSuiteGetMostUpvotedReply(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    """
+    if comments do not exist, function should gracefully return null
+    """
     def test_suite_get_most_upvoted_reply_no_comments(self):
         expected = None
 
@@ -360,6 +376,9 @@ class TestSuiteGetMostUpvotedReply(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    """
+    if comment does have replies, function should gracefully return null
+    """
     def test_suite_get_most_upvoted_reply_no_replies(self):
         expected = None
 
