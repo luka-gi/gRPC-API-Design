@@ -110,6 +110,18 @@ message GetNCommentsResponse {
   optional bool has_replies = 2;
 }
 
+message MonitorScoreRequest {
+  optional int64 postID = 1;
+  optional int64 commentID = 2;
+}
+
+message MonitorScoreResponse {
+  optional int64 postID = 1;
+  optional int32 postScore = 2;
+  repeated int64 commentIDs = 3;
+  repeated int32 commentScores = 4;
+}
+
 // services
 service PostService {
   // send a title, a description, an initial state, and an image to be uploaded
@@ -124,4 +136,7 @@ service PostService {
   rpc GetPost (GetPostMetaRequest) returns (GetPostMetaResponse) {}
   // send post ID and number of comments to get from it and get N most upvoted comments from it
   rpc GetNComments (GetNCommentsRequest) returns (stream GetNCommentsResponse) {}
+  // send post ID to monitor post score. add comment ID to monitor comment scores in that post.
+  // return stream of scores related to the IDs
+  rpc MonitorPostScore (stream MonitorScoreRequest) returns (stream MonitorScoreResponse) {}
 }

@@ -191,6 +191,14 @@ def test_posting_invalid(client):
     print("Post 8 recieved")
     print(response)
 
+def test_bonus(client):
+    print("\n\n")
+    print("test bonus service\n")
+    response = client.monitorPostScore(0, [0,7,10])
+
+    print("Monitor recieved")
+    print(response)
+
 class client_test:
     def run(client):
         print("starting basic test\n")
@@ -199,3 +207,5 @@ class client_test:
         
         test_commenting_invalid(client)
         test_posting_invalid(client)
+        
+        test_bonus(client)

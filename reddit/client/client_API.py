@@ -313,3 +313,35 @@ class client_gRPC_API:
             toReturn.append(comment_object)
 
         return toReturn
+
+    def scoreIterator(self,postID,commentIDs):
+        # first request has to be post ID
+        request = post_pb2.MonitorScoreRequest(
+            postID=postID,
+        )
+
+        yield request
+
+        # following requests are a single comment ID
+        for commentID in commentIDs:
+            request = post_pb2.MonitorScoreRequest(
+                commentID=commentID,
+            )
+            yield request
+            
+
+    def monitorPostScore(self, postID, commentIDs):
+        # send post ID to retrieve scores from, and max number of comments to retrieve
+
+        monitorScores = []
+
+        # get each response for each iteration and print results
+        for response in self.post_service.MonitorPostScore(self.scoreIterator(postID,commentIDs)):
+            monitorScores.append({
+                "post": {
+                    postID: response.postScore
+                },
+                "comments": dict(zip(response.commentIDs, response.commentScores))
+            })
+        
+        return monitorScores

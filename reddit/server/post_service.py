@@ -291,3 +291,52 @@ class Poster(post_pb2_grpc.PostServiceServicer):
             else:
                 # break loop after N comments
                 break
+
+    def MonitorPostScore(self, request_iterator, context):
+
+        monitored = {}
+
+        # get the FIRST request - should be a postID
+        request = request_iterator.next()
+        postID = request.postID
+
+        # get post by ID from DB
+        post = self.DBConn.getPostByID(postID)
+        
+        if not post:
+            return post_pb2.MonitorScoreResponse()
+
+        # return a post score first
+        yield post_pb2.MonitorScoreResponse(
+            postID=postID,
+            postScore=post["score"]
+        )
+        
+        # now store known comments in here
+        commentIDs = []
+
+        for request in request_iterator:
+            # continue polling DB
+            post = self.DBConn.getPostByID(postID)
+
+            if not post:
+                return post_pb2.MonitorScoreResponse()
+
+            # add new comment ID if possible
+            if request.commentID not in commentIDs:
+                if(self.DBConn.getCommentByID(request.commentID)):
+                    commentIDs.append(request.commentID)
+            
+            # iterate available commentIDs
+            commentScores = []
+
+            for commentID in commentIDs:
+                comment = self.DBConn.getCommentByID(commentID)
+                commentScores.append(comment["score"])
+
+            yield post_pb2.MonitorScoreResponse(
+                postID=postID,
+                postScore=post["score"],
+                commentIDs=commentIDs,
+                commentScores=commentScores,
+            )
