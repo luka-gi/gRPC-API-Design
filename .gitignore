@@ -3,3 +3,5 @@ grpc
 
 *_pb2*
 __pycache__
+
+reddit/server/database/reddit.db
