@@ -100,10 +100,10 @@ class Poster(post_pb2_grpc.PostServiceServicer):
 
     def PostImage(self, request, context):
         if not (request.meta.title and request.meta.text and request.meta.state):
-            return None
+            return post_pb2.newImageResponse()
 
         if not request.image.url:
-            return None
+            return post_pb2.newImageResponse()
         
         # parse request
         newImage = Image(self.DBConn,request)
@@ -118,10 +118,10 @@ class Poster(post_pb2_grpc.PostServiceServicer):
 
     def PostVideo(self, request, context):
         if not (request.meta.title and request.meta.text and request.meta.state):
-            return None
+            return post_pb2.newVideoResponse()
 
         if not request.video.frames:
-            return None
+            return post_pb2.newVideoResponse()
 
         # parse request
         newVideo = Video(self.DBConn,request)
@@ -136,12 +136,12 @@ class Poster(post_pb2_grpc.PostServiceServicer):
     
     def GetPostContent(self, request, context):
         if request.postID == None:
-            return None
+            return post_pb2.GetPostContentResponse()
         
         post = self.DBConn.getPostByID(request.postID)
 
         if not post:
-            return None
+            return post_pb2.GetPostContentResponse()
         
         yield post_pb2.GetPostContentResponse(
             type=post["type"]
@@ -157,16 +157,16 @@ class Poster(post_pb2_grpc.PostServiceServicer):
                     videoframe=frame
                 )       
         else:
-            return None
+            return post_pb2.GetPostContentResponse()
         
     def RatePost(self, request, contex):
         if request.postID == None:
-            return None
+            return post_pb2.RatePostResponse()
         
         post = self.DBConn.ratePost(request.postID, request.rating)
 
         if not post:
-            return None
+            return post_pb2.RatePostResponse()
         
         RatePostResponse = post_pb2.RatePostResponse(
             meta=post_pb2.PostMeta(
@@ -184,12 +184,12 @@ class Poster(post_pb2_grpc.PostServiceServicer):
     def GetPost(self, request, context):
 
         if request.postID == None:
-            return None
+            return post_pb2.GetPostMetaResponse()
         # add comment to DB
         post = self.DBConn.getPostByID(request.postID)
 
         if not post:
-            return None
+            return post_pb2.GetPostMetaResponse()
 
         GetPostMetaResponse = post_pb2.GetPostMetaResponse(
             meta=post_pb2.PostMeta(
@@ -207,12 +207,12 @@ class Poster(post_pb2_grpc.PostServiceServicer):
     def GetNComments(self, request, context):
 
         if request.postID == None:
-            return None
+            return post_pb2.GetNCommentsResponse()
         
         post = self.DBConn.getPostByID(request.postID)
 
         if not post:
-            return None
+            return post_pb2.GetNCommentsResponse()
 
         sorted_comments = sorted(post["comment"], key=lambda dict: -dict["score"])
 

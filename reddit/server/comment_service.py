@@ -50,12 +50,12 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
     
     def RateComment(self, request, contex):
         if request.commentID == None:
-            return None
+            return comment_pb2.RateCommentResponse()
         
         comment = self.DBConn.rateComment(request.commentID, request.rating)
 
         if not comment:
-            return None
+            return comment_pb2.RateCommentResponse()
         
         RateCommentResponse = comment_pb2.RateCommentResponse(
             comment=comment_pb2.Comment(
@@ -75,12 +75,12 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
     def GetComment(self, request, context):
 
         if request.commentID == None:
-            return None
+            return comment_pb2.GetCommentResponse()
         # add comment to DB
         comment = self.DBConn.getCommentByID(request.commentID)
 
         if not comment:
-            return None
+            return comment_pb2.GetCommentResponse()
 
         GetCommentResponse = comment_pb2.GetCommentResponse(
             comment=comment_pb2.Comment(
@@ -99,12 +99,12 @@ class Commenter(comment_pb2_grpc.CommentServiceServicer):
     
     def GetNComments(self, request, context):
         if request.commentID == None:
-            return None
+            return comment_pb2.GetNCommentsResponse()
         
         comment = self.DBConn.getCommentByID(request.commentID)
 
         if not comment:
-            return None
+            return comment_pb2.GetNCommentsResponse()
         
         comments = []
 

@@ -26,6 +26,10 @@ class client_gRPC_API:
         self.comment_service = comment_pb2_grpc.CommentServiceStub(self.channel)
 
     def postImage(self, title, text, state, image_url):
+        
+        if (title == None or text == None or image_url == None):
+            return None
+
         response = self.post_service.PostImage(post_pb2.NewImagePostRequest(
             meta=post_pb2.NewPostMeta(
                 title=title,
@@ -50,6 +54,13 @@ class client_gRPC_API:
         return responseToDict
     
     def postVideo(self, title, text, state, video_frames):
+
+        if (title == None or text == None or video_frames == None):
+            return None
+
+        if (len(video_frames) == 0):
+            return None
+
         response = self.post_service.PostVideo(post_pb2.NewVideoPostRequest(
             meta=post_pb2.NewPostMeta(
                 title=title,
@@ -78,6 +89,9 @@ class client_gRPC_API:
             postID=postID
         ))
 
+        if (response == post_pb2.GetPostMetaResponse()):
+            return None
+
         responseToDict = {
             "title":response.meta.title,
             "text":response.meta.text,
@@ -97,6 +111,9 @@ class client_gRPC_API:
 
         response_list = list(response)
 
+        if len(response_list) == 0:
+            return None
+
         type = response_list[0].type
         content_list = response_list[1:]
 
@@ -113,12 +130,19 @@ class client_gRPC_API:
             rating=rating
         ))
 
+        if response == post_pb2.RatePostResponse():
+            return None
+
         return response.meta.score
 
     def close(self):
         self.channel.close()
 
     def createComment(self, userID, content, state):
+
+        if (userID == None or content == None):
+            return None
+
         response = self.comment_service.CreateComment(comment_pb2.NewCommentRequest(
             author=user_pb2.User(
                 UID = userID
@@ -145,12 +169,18 @@ class client_gRPC_API:
             rating=rating
         ))
 
+        if(response == comment_pb2.RateCommentResponse()):
+            return None
+
         return response.comment.score
     
     def getComment(self, commentID):
         response = self.comment_service.GetComment(comment_pb2.GetCommentRequest(
             commentID=commentID
         ))
+
+        if(response == comment_pb2.GetCommentResponse()):
+            return None
     
         responseToDict = {
             "author":response.comment.author.UID,

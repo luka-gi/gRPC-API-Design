@@ -93,8 +93,104 @@ def test_commenting(client):
     print("Comment 5 recieved")
     print(response)
 
+def test_commenting_invalid(client):
+    print("\n\n")
+    print("test creating invalid comment\n")
+    response = client.createComment(None, None, "NORMAL")
+
+    print("Comment 1 recieved")
+    print(response)
+
+    print("\n\n")
+    print("test rating invalid comment\n")
+    response = client.rateComment(99, "UPVOTE")
+
+    print("Comment 2 recieved")
+    print(response)
+
+    print("\n\n")
+    print("test rating invalid comment\n")
+    response = client.rateComment(99, "DOWNVOTE")
+
+    print("Comment 3 recieved")
+    print(response)
+
+    print("\n\n")
+    print("test getting N comments from invalid comment\n")
+    response = client.getNCommentsFromComment(99, 2)
+
+    print("Comment 4 recieved")
+    print(response)
+
+    print("\n\n")
+    print("test get a comments from invalid ID\n")
+    response = client.getComment(99)
+
+    print("Comment 5 recieved")
+    print(response)
+
+def test_posting_invalid(client):
+    print("\n\n")
+    print("Testing post image")
+    response = client.postImage(None,None,"NORMAL",None)
+
+    print("Post 1 received: ")
+    print(response)
+
+    print("\n\n")
+    print("Testing post video\n")
+    response = client.postVideo(None,None,"NORMAL",None)
+
+    print("Post 2 received: ")
+    print(response)
+
+    print("\n\n")
+    print("get post content of invalid image\n")
+    response = client.getPostContent(99)
+
+    print("Post 3 received: ")
+    print(response)
+
+    print("\n\n")
+    print("get post content of invalid video\n")
+    response = client.getPostContent(99)
+
+    print("Post 4 received: ")
+    print(response)
+
+    print("\n\n")
+    print("test invalid upvote\n")
+    response = client.ratePost(99, "UPVOTE")
+
+    print("Post 5 received: ")
+    print(response)
+
+    print("\n\n")
+    print("test invalid downvote\n")
+    response = client.ratePost(99, "DOWNVOTE")
+
+    print("Post 6 received: ")
+    print(response)
+
+    print("\n\n")
+    print("test get N comments from invalid post\n")
+    response = client.getNCommentsFromPost(99, 2)
+
+    print("Post 7 recieved")
+    print(response)
+
+    print("\n\n")
+    print("test get a post from invalid ID\n")
+    response = client.getPostMeta(99)
+
+    print("Post 8 recieved")
+    print(response)
+
 class client_test:
     def run(client):
         print("starting basic test\n")
         test_posting(client)
         test_commenting(client)
+        
+        test_commenting_invalid(client)
+        test_posting_invalid(client)
