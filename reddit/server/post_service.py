@@ -15,7 +15,12 @@ class Post:
         self.state = request.meta.state
         self.ID = DBConn.getNewPostID()
         self.subreddit = DBConn.getSubreddit(request.meta.subreddit)
-        self.tags = request.meta.tags
+        self.tags = []
+
+        # validate tags
+        for tag in request.meta.tags:
+            if tag in self.subreddit["tags"]:
+                self.tags.append(tag)
 
     def convertMeta(self):
         return post_pb2.PostMeta(
