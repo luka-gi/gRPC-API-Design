@@ -35,7 +35,7 @@ posts
     state TEXT,
     published TEXT,
     ID INTEGER,
-    type TEXT
+    type TEXT,
     content TEXT,
     comment TEXT,
     subreddit TEXT,
@@ -107,7 +107,7 @@ posts
     state,
     published,
     ID,
-    type
+    type,
     content,
     comment,
     subreddit,
@@ -121,7 +121,7 @@ VALUES
     :state,
     :published,
     :ID,
-    :type
+    :type,
     :content,
     :comment,
     :subreddit,
@@ -173,10 +173,10 @@ print()
 cur.execute('SELECT * FROM posts')
 for post in cur.fetchmany(2):
     print(post)
-    print(json.loads(post[6]))
     print(json.loads(post[7]))
     print(json.loads(post[8]))
     print(json.loads(post[9]))
+    print(json.loads(post[10]))
 cur.execute('SELECT * FROM comments')
 print()
 for comment in cur.fetchmany(2):

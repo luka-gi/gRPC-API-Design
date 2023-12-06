@@ -17,7 +17,6 @@ class Post:
         self.text = request.meta.text
         self.state = request.meta.state
         self.ID = DBConn.getNewPostID()
-        self.comment = []
         self.subreddit = DBConn.getSubreddit(request.meta.subreddit)
         self.tags = []
 
@@ -34,7 +33,6 @@ class Post:
                 published = self.published,
                 score = self.score,
                 ID = self.ID,
-                comment = self.comment,
                 subreddit = subreddit_pb2.Subreddit(
                     name = self.subreddit["name"],
                     state = self.subreddit["state"],
@@ -80,7 +78,6 @@ class Image(Post):
             self.ID,
             self.type,
             self.content,
-            self.comment,
             self.subreddit,
             self.tags
         )
@@ -113,7 +110,7 @@ class Video(Post):
         )
     
     def addNewVideoToDatabase(self, DBConn):
-        DBConn.addNewImagePost(
+        DBConn.addNewVideoPost(
             self.title,
             self.text,
             self.state,
@@ -121,7 +118,6 @@ class Video(Post):
             self.score,
             self.ID,
             self.type,
-            self.comment,
             self.content,
             self.subreddit,
             self.tags

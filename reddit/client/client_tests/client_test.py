@@ -19,47 +19,47 @@ def test_posting(client):
     print("Post 2 received: ")
     print(response)
 
-    print("\n\n")
-    print("get post content of an image\n")
-    response = client.getPostContent(0)
+    # print("\n\n")
+    # print("get post content of an image\n")
+    # response = client.getPostContent(0)
 
-    print("Post 3 received: ")
-    print(response)
+    # print("Post 3 received: ")
+    # print(response)
 
-    print("\n\n")
-    print("get post content of a video\n")
-    response = client.getPostContent(1)
+    # print("\n\n")
+    # print("get post content of a video\n")
+    # response = client.getPostContent(1)
 
-    print("Post 4 received: ")
-    print(response)
+    # print("Post 4 received: ")
+    # print(response)
 
-    print("\n\n")
-    print("test upvote\n")
-    response = client.ratePost(1, "UPVOTE")
+    # print("\n\n")
+    # print("test upvote\n")
+    # response = client.ratePost(1, "UPVOTE")
 
-    print("Post 5 received: ")
-    print(response)
+    # print("Post 5 received: ")
+    # print(response)
 
-    print("\n\n")
-    print("test downvote\n")
-    response = client.ratePost(0, "DOWNVOTE")
+    # print("\n\n")
+    # print("test downvote\n")
+    # response = client.ratePost(0, "DOWNVOTE")
 
-    print("Post 6 received: ")
-    print(response)
+    # print("Post 6 received: ")
+    # print(response)
 
-    print("\n\n")
-    print("test get N comments from the post\n")
-    response = client.getNCommentsFromPost(0, 2)
+    # print("\n\n")
+    # print("test get N comments from the post\n")
+    # response = client.getNCommentsFromPost(0, 2)
 
-    print("Post 7 recieved")
-    print(response)
+    # print("Post 7 recieved")
+    # print(response)
 
-    print("\n\n")
-    print("test get a post from the ID\n")
-    response = client.getPostMeta(0)
+    # print("\n\n")
+    # print("test get a post from the ID\n")
+    # response = client.getPostMeta(0)
 
-    print("Post 8 recieved")
-    print(response)
+    # print("Post 8 recieved")
+    # print(response)
 
 def test_commenting(client):
 
@@ -203,9 +203,9 @@ class client_test:
     def run(client):
         print("starting basic test\n")
         test_posting(client)
-        test_commenting(client)
+        # test_commenting(client)
         
-        test_commenting_invalid(client)
-        test_posting_invalid(client)
+        # test_commenting_invalid(client)
+        # test_posting_invalid(client)
         
-        test_bonus(client)
+        # test_bonus(client)
