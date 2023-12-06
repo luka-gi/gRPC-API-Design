@@ -2,14 +2,14 @@ def test_posting(client):
 
     print("\n\n")
     print("Testing post image")
-    response = client.postImage("fakeTitle","fakeText","NORMAL","http://")
+    response = client.postImage("fakeTitle","fakeText","NORMAL","http://","subreddit1",["tag1","tag2"])
 
     print("Post 1 received: ")
     print(response)
 
     print("\n\n")
     print("Testing post video\n")
-    response = client.postVideo("fakeVideoTitle","fakeVideoDesc","NORMAL",["frame45","frame46","frame47"])
+    response = client.postVideo("fakeVideoTitle","fakeVideoDesc","NORMAL",["frame45","frame46","frame47"],"subreddit2",["tag5","tag6"])
 
     print("Post 2 received: ")
     print(response)
@@ -132,14 +132,14 @@ def test_commenting_invalid(client):
 def test_posting_invalid(client):
     print("\n\n")
     print("Testing post image")
-    response = client.postImage(None,None,"NORMAL",None)
+    response = client.postImage(None,None,"NORMAL",None,None,None)
 
     print("Post 1 received: ")
     print(response)
 
     print("\n\n")
     print("Testing post video\n")
-    response = client.postVideo(None,None,"NORMAL",None)
+    response = client.postVideo(None,None,"NORMAL",None,None,None)
 
     print("Post 2 received: ")
     print(response)

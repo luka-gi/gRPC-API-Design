@@ -2,6 +2,7 @@ from protos import post_pb2
 from protos import comment_pb2
 from protos import user_pb2
 from protos import post_pb2_grpc
+from protos import subreddit_pb2
 
 from datetime import datetime
 
@@ -13,6 +14,8 @@ class Post:
         self.text = request.meta.text
         self.state = request.meta.state
         self.ID = DBConn.getNewPostID()
+        self.subreddit = DBConn.getSubreddit(request.meta.subreddit)
+        self.tags = request.meta.tags
 
     def convertMeta(self):
         return post_pb2.PostMeta(
@@ -21,7 +24,13 @@ class Post:
                 state = self.state,
                 published = self.published,
                 score = self.score,
-                ID = self.ID
+                ID = self.ID,
+                subreddit = subreddit_pb2.Subreddit(
+                    name = self.subreddit["name"],
+                    state = self.subreddit["state"],
+                    tags = self.subreddit["tags"]
+                ),
+                tags = self.tags
             )
 
 class Image(Post):
@@ -55,7 +64,9 @@ class Image(Post):
             self.score,
             self.ID,
             self.type,
-            self.content
+            self.content,
+            self.subreddit,
+            self.tags
         )
     
 class Video(Post):
@@ -89,7 +100,9 @@ class Video(Post):
             self.score,
             self.ID,
             self.type,
-            self.content
+            self.content,
+            self.subreddit,
+            self.tags
         )
 
 class Poster(post_pb2_grpc.PostServiceServicer):
@@ -175,7 +188,9 @@ class Poster(post_pb2_grpc.PostServiceServicer):
                 state = post["state"],
                 published = post["published"],
                 score = post["score"],
-                ID = post["ID"]
+                ID = post["ID"],
+                subreddit = post["subreddit"],
+                tags = post["tags"]
             )
         )
 
@@ -198,7 +213,13 @@ class Poster(post_pb2_grpc.PostServiceServicer):
                 state = post["state"],
                 published = post["published"],
                 score = post["score"],
-                ID = post["ID"]
+                ID = post["ID"],
+                subreddit = subreddit_pb2.Subreddit(
+                    name=post["subreddit"]["name"],
+                    state=post["subreddit"]["state"],
+                    tags=post["subreddit"]["tags"],
+                ),
+                tags = post["tags"]
             )
         )
 

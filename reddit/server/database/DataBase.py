@@ -115,6 +115,19 @@ class database_in_mem:
         }
     ]
 
+    SubReddits = [
+        {
+            "name": "subreddit1",
+            "state": "PUBLIC",
+            "tags": ["tag1","tag2","tag3"]
+        },
+        {
+            "name": "subreddit2",
+            "state": "PUBLIC",
+            "tags": ["tag4","tag5","tag6"]
+        },
+    ]
+
     PostID = 2
 
     Posts = [
@@ -127,7 +140,9 @@ class database_in_mem:
             "ID": 0,
             "type": "IMAGE",
             "content": "http://kasjfdklsajfdlkj",
-            "comment": [Comments[0],Comments[1],Comments[2]]
+            "comment": [Comments[0],Comments[1],Comments[2]],
+            "subreddit": SubReddits[0],
+            "tags": ["tag1","tag2","tag3"]
         },
         {
             "title": "testTitle2",
@@ -138,6 +153,8 @@ class database_in_mem:
             "ID": 1,
             "type": "VIDEO",
             "content":["frame1","frame2","frame3"],
-            "comment": [Comments[3]]
+            "comment": [Comments[3]],
+            "subreddit": SubReddits[1],
+            "tags": ["tag4","tag5","tag6"]
         },
     ]

@@ -17,7 +17,7 @@ class DataBase():
 
         return pre_increment
     
-    def addNewImagePost(self, title, text, state, published, score, ID, type, content):
+    def addNewImagePost(self, title, text, state, published, score, ID, type, content, subreddit, tags):
         database_in_mem.Posts.append({
             "score": score,
             "published": published,
@@ -27,9 +27,11 @@ class DataBase():
             "state": state,
             "type": type,
             "content": content,
+            "subreddit": subreddit,
+            "tags": tags
         })
 
-    def addNewVideoPost(self, title, text, state, published, score, ID, type, content):
+    def addNewVideoPost(self, title, text, state, published, score, ID, type, content, subreddit, tags):
         database_in_mem.Posts.append({
             "score": score,
             "published": published,
@@ -39,6 +41,8 @@ class DataBase():
             "state": state,
             "type": type,
             "content": content,
+            "subreddit": subreddit,
+            "tags": tags
         })
 
     def getPosts(self):
@@ -101,3 +105,17 @@ class DataBase():
             comment["score"] = comment["score"] - 1
 
         return comment
+
+    def getSubreddit(self, name):
+        for subreddit in database_in_mem.SubReddits:
+            if subreddit["name"] == name:
+                return subreddit
+        return None
+    
+    def getSubredditTags(self, name):
+        subreddit = self.getSubreddit(name)
+
+        if(subreddit):
+            return subreddit.tags
+        else:
+            return None

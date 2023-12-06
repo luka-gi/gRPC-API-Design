@@ -25,9 +25,9 @@ class client_gRPC_API:
         self.post_service = post_pb2_grpc.PostServiceStub(self.channel)
         self.comment_service = comment_pb2_grpc.CommentServiceStub(self.channel)
 
-    def postImage(self, title, text, state, image_url):
+    def postImage(self, title, text, state, image_url, subreddit, tags):
         
-        if (title == None or text == None or image_url == None):
+        if (title == None or text == None or image_url == None or subreddit == None or tags == None):
             return None
 
         response = self.post_service.PostImage(post_pb2.NewImagePostRequest(
@@ -35,6 +35,8 @@ class client_gRPC_API:
                 title=title,
                 text=text,
                 state=state,
+                subreddit=subreddit,
+                tags=tags
             ),
             image=post_pb2.Image(url=image_url)
         ))
@@ -49,13 +51,19 @@ class client_gRPC_API:
             "type":response.meta.type,
             "comment":response.meta.comment,
             "content":response.image.url,
+            "subreddit":{
+                "name":response.meta.subreddit.name,
+                "state":response.meta.subreddit.state,
+                "tags":response.meta.subreddit.tags,
+            },
+            "tags":response.meta.tags,
         }
 
         return responseToDict
     
-    def postVideo(self, title, text, state, video_frames):
+    def postVideo(self, title, text, state, video_frames, subreddit, tags):
 
-        if (title == None or text == None or video_frames == None):
+        if (title == None or text == None or video_frames == None or subreddit == None or tags == None):
             return None
 
         if (len(video_frames) == 0):
@@ -66,6 +74,8 @@ class client_gRPC_API:
                 title=title,
                 text=text,
                 state=state,
+                subreddit=subreddit,
+                tags=tags
             ),
             video=post_pb2.Video(frames=video_frames)
         ))
@@ -80,6 +90,12 @@ class client_gRPC_API:
             "type":response.meta.type,
             "comment":response.meta.comment,
             "content":response.video.frames,
+            "subreddit":{
+                "name":response.meta.subreddit.name,
+                "state":response.meta.subreddit.state,
+                "tags":response.meta.subreddit.tags,
+            },
+            "tags":response.meta.tags,
         }
 
         return responseToDict
@@ -100,6 +116,12 @@ class client_gRPC_API:
             "published":response.meta.published,
             "ID":response.meta.ID,
             "type":response.meta.type,
+            "subreddit":{
+                "name":response.meta.subreddit.name,
+                "state":response.meta.subreddit.state,
+                "tags":response.meta.subreddit.tags,
+            },
+            "tags":response.meta.tags,
         }
 
         return responseToDict
