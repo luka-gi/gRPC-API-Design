@@ -2,6 +2,15 @@ from unittest.mock import Mock
 import unittest
 import sys
 
+# import server_API
+sys.path.append('server')
+from server.server_API import server_gRPC_API
+from server.reddit_server import ServerConfig
+from server.database.DataBase_API import DataBase
+sys.path.append('client')
+from client.reddit_client import ClientConfig
+from client.client_API import client_gRPC_API
+
 def get_most_upvoted_reply(client, postID_to_get, max_comments_to_get, max_replies_to_get):
 
     # get first post 
@@ -366,8 +375,87 @@ class TestSuiteGetMostUpvotedReply(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        TestSuiteGetMostUpvotedReply.print_flag = sys.argv.pop()
+    def test_suite_actual_server(self):
+        # According to the in-memory database, this is the expected output:
+        # See the database, in the structure 'Comments'
+        # The comment under post with an ID of 0 has a high score comment of 0 with score 10
+        # Under that comment, there is a comment with ID 1 with a score of 9 as the highest rating
+        expected = {
+            'author': 'testuser',
+            'score': 9, 'state': 0, 
+            'published': '11/30/23', 
+            'content': 'example comments', 
+            'ID': 1, 'comment': 
+            [
+                {
+                    'author': 'testuser', 
+                    'score': 39, 
+                    'state': 0, 
+                    'published': '11/30/23', 
+                    'content': 'example comments', 
+                    'ID': 2, 
+                    'comment': []
+                },
+                {
+                    'author': 'testuser', 
+                    'score': -7, 
+                    'state': 0, 
+                    'published': '11/30/23', 
+                    'content': 'example comments', 
+                    'ID': 8, 
+                    'comment': []
+                }
+            ]
+        }
 
+        server_config = ServerConfig()
+        client_config = ClientConfig()
+        database = DataBase()
+
+        # start server
+        server = server_gRPC_API(server_config, database)
+        server.start()
+
+        # start client
+        client = client_gRPC_API(client_config)
+        client.open()
+
+        # run function under test
+        actual = get_most_upvoted_reply(client,0,2,2)
+
+        # end client and server
+        client.close()
+
+        server.stop()
+
+        #compare responses
+        self.assertDictEqual(expected, actual)
+
+    def test_suite_actual_server_false(self):
+        expected = None
+
+        server_config = ServerConfig()
+        client_config = ClientConfig()
+        database = DataBase()
+
+        # start server
+        server = server_gRPC_API(server_config, database)
+        server.start()
+
+        # start client
+        client = client_gRPC_API(client_config)
+        client.open()
+
+        # run function under test
+        actual = get_most_upvoted_reply(client,99,2,2)
+
+        # end client and server
+        client.close()
+
+        server.stop()
+
+        #compare responses, should be none
+        self.assertEqual(expected, actual)
+
+if __name__ == "__main__":
     unittest.main()
