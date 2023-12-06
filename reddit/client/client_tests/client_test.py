@@ -19,19 +19,19 @@ def test_posting(client):
     print("Post 2 received: ")
     print(response)
 
-    # print("\n\n")
-    # print("get post content of an image\n")
-    # response = client.getPostContent(0)
+    print("\n\n")
+    print("get post content of an image\n")
+    response = client.getPostContent(0)
 
-    # print("Post 3 received: ")
-    # print(response)
+    print("Post 3 received: ")
+    print(response)
 
-    # print("\n\n")
-    # print("get post content of a video\n")
-    # response = client.getPostContent(1)
+    print("\n\n")
+    print("get post content of a video\n")
+    response = client.getPostContent(1)
 
-    # print("Post 4 received: ")
-    # print(response)
+    print("Post 4 received: ")
+    print(response)
 
     # print("\n\n")
     # print("test upvote\n")

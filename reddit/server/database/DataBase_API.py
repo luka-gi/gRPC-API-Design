@@ -20,8 +20,15 @@ class DataBase():
         cursor.close()
         connection.close()
 
+    def _to_dict(self,cursor, row):
+        dict = {}
+        for idx, col in enumerate(cursor.description):
+            dict[col[0]] = row[idx]
+        return dict
+    
     def _connect_sqlite(self):
         connection = sqlite3.connect("database/reddit.db")
+        connection.row_factory = self._to_dict
         cursor = connection.cursor()
 
         return (connection,cursor)
@@ -140,10 +147,14 @@ class DataBase():
         return database_in_mem.Posts
     
     def getPostByID(self, postID):
-        for post in database_in_mem.Posts:
-            if post["ID"] is postID:
-                return post
-        return None
+        (connection, cursor) = self._connect_sqlite()
+        cursor.execute('SELECT * FROM posts WHERE ID={}'.format(postID))
+        post = cursor.fetchone()
+
+        # arrays, such as videoframes, need to be re-parsed
+        post["content"] = json.loads(post["content"])
+
+        return post
     
     def ratePost(self, postID, rating):
         post = self.getPostByID(postID)
