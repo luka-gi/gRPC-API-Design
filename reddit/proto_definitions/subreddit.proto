@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package reddit.subreddit;
+
+message Subreddit {
+    optional string name = 1;
+    optional SubState state = 2; 
+    repeated string tags = 3;
+
+    enum SubState {
+        PUBLIC = 0;
+        PRIVATE = 1;
+        HIDDEN = 2;
+    }
+}

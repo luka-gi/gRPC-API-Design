@@ -3,6 +3,7 @@ syntax = "proto3";
 package reddit.post;
 
 import "comment.proto";
+import "subreddit.proto";
 
 message Image {
   optional string url = 1;
@@ -21,6 +22,8 @@ message PostMeta {
   optional int64 ID = 6;
   optional ContentType type = 9;
   repeated comment.Comment comment = 10; 
+  optional subreddit.Subreddit subreddit = 11;
+  repeated string tags = 12;
 
   enum ContentType {
     IMAGE = 0;
