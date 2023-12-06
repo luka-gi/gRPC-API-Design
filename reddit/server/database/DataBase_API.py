@@ -85,20 +85,56 @@ class DataBase():
         self._close_sqlite(connection,cursor)
 
 
-    def addNewVideoPost(self, title, text, state, published, score, ID, type, content, subreddit, tags):
-        database_in_mem.Posts.append({
+    def addNewVideoPost(self, title, text, state, published, score, ID, types, content, subreddit, tags):
+        (connection, cursor) = self._connect_sqlite()
+
+        input = {
             "score": score,
             "published": published,
             "ID": ID,
             "title": title,
             "text": text,
             "state": state,
-            "type": type,
-            "content": content,
+            "type": types,
+            "content": json.dumps(content),
             "comment": "[]",
-            "subreddit": subreddit,
-            "tags": tags
-        })
+            "subreddit": json.dumps(subreddit),
+            "tags": json.dumps(tags)
+        }
+
+        cursor.execute('''INSERT INTO
+                            posts
+                            (
+                                title,
+                                text,
+                                score,
+                                state,
+                                published,
+                                ID,
+                                type,
+                                content,
+                                comment,
+                                subreddit,
+                                tags
+                            )
+                            VALUES
+                            (
+                                :title,
+                                :text,
+                                :score,
+                                :state,
+                                :published,
+                                :ID,
+                                :type,
+                                :content,
+                                :comment,
+                                :subreddit,
+                                :tags
+                            )
+                            ''',input)
+
+        connection.commit()
+        self._close_sqlite(connection,cursor)
 
     def getPosts(self):
         return database_in_mem.Posts

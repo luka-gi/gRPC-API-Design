@@ -91,7 +91,7 @@ class Video(Post):
     def __init__(self, DBConn, request):
         super().__init__(DBConn, request)
         self.type = "VIDEO"
-        self.content = request.video.frames
+        self.content = list(request.video.frames)
 
     def convertMeta(self):
         MetaToReturn = super().convertMeta()
