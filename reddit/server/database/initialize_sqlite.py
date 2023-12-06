@@ -35,6 +35,7 @@ posts
     state TEXT,
     published TEXT,
     ID INTEGER,
+    type TEXT
     content TEXT,
     comment TEXT,
     subreddit TEXT,
@@ -106,6 +107,7 @@ posts
     state,
     published,
     ID,
+    type
     content,
     comment,
     subreddit,
@@ -119,6 +121,7 @@ VALUES
     :state,
     :published,
     :ID,
+    :type
     :content,
     :comment,
     :subreddit,
@@ -181,7 +184,7 @@ for comment in cur.fetchmany(2):
     print(json.loads(comment[6]))
 
 
-# close connections
 conn.commit()
+# close connections
 cur.close()
 conn.close()
