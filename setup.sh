@@ -11,3 +11,8 @@ python -m pip install grpcio grpcio-tools
 pushd reddit
 ./gen_API.sh
 popd
+
+# initialize DB
+pushd reddit/server/database
+python initialize_sqlite.py
+popd
