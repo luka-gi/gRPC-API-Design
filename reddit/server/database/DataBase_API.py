@@ -144,7 +144,19 @@ class DataBase():
         self._close_sqlite(connection,cursor)
 
     def getPosts(self):
-        return database_in_mem.Posts
+        (connection, cursor) = self._connect_sqlite()
+        cursor.execute('SELECT * FROM posts')
+        posts = cursor.fetchall()
+
+        # arrays and objects, such as videoframes and subreddits, need to be re-parsed
+        for post in posts:
+            post["content"] = json.loads(post["content"])
+            post["subreddit"] = json.loads(post["subreddit"])
+            post["tags"] = json.loads(post["tags"])
+
+        self._close_sqlite(connection, cursor)
+
+        return posts
     
     def getPostByID(self, postID):
         (connection, cursor) = self._connect_sqlite()
