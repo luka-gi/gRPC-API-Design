@@ -214,8 +214,8 @@ class Poster(post_pb2_grpc.PostServiceServicer):
                 published = post["published"],
                 score = post["score"],
                 ID = post["ID"],
-                subreddit = post["subreddit"],
-                tags = post["tags"]
+                # subreddit = post["subreddit"],
+                # tags = post["tags"]
             )
         )
 

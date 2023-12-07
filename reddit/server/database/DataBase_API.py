@@ -151,21 +151,28 @@ class DataBase():
         cursor.execute('SELECT * FROM posts WHERE ID={}'.format(postID))
         post = cursor.fetchone()
 
-        # arrays, such as videoframes, need to be re-parsed
+        # arrays and objects, such as videoframes and subreddits, need to be re-parsed
         post["content"] = json.loads(post["content"])
+        post["subreddit"] = json.loads(post["subreddit"])
+        post["tags"] = json.loads(post["tags"])
+
+        self._close_sqlite(connection, cursor)
 
         return post
     
     def ratePost(self, postID, rating):
-        post = self.getPostByID(postID)
-
-        if not post:
-            return None
+        (connection, cursor) = self._connect_sqlite()
 
         if(rating == "UPVOTE"):
-            post["score"] = post["score"] + 1
+            cursor.execute('UPDATE posts SET score=score+1 WHERE ID={} RETURNING *'.format(postID))
+            post = cursor.fetchone()
+
         elif(rating == "DOWNVOTE"):
-            post["score"] = post["score"] - 1
+            cursor.execute('UPDATE posts SET score=score-1 WHERE ID={} RETURNING *'.format(postID))
+            post = cursor.fetchone()
+
+        connection.commit()
+        self._close_sqlite(connection, cursor)
 
         return post
     

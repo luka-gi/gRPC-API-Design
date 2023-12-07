@@ -33,19 +33,19 @@ def test_posting(client):
     print("Post 4 received: ")
     print(response)
 
-    # print("\n\n")
-    # print("test upvote\n")
-    # response = client.ratePost(1, "UPVOTE")
+    print("\n\n")
+    print("test upvote\n")
+    response = client.ratePost(1, "UPVOTE")
 
-    # print("Post 5 received: ")
-    # print(response)
+    print("Post 5 received: ")
+    print(response)
 
-    # print("\n\n")
-    # print("test downvote\n")
-    # response = client.ratePost(0, "DOWNVOTE")
+    print("\n\n")
+    print("test downvote\n")
+    response = client.ratePost(0, "DOWNVOTE")
 
-    # print("Post 6 received: ")
-    # print(response)
+    print("Post 6 received: ")
+    print(response)
 
     # print("\n\n")
     # print("test get N comments from the post\n")
