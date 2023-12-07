@@ -164,6 +164,7 @@ class DataBase():
         post = cursor.fetchone()
 
         # arrays and objects, such as videoframes and subreddits, need to be re-parsed
+        post["comment"] = json.loads(post["comment"])
         post["content"] = json.loads(post["content"])
         post["subreddit"] = json.loads(post["subreddit"])
         post["tags"] = json.loads(post["tags"])
@@ -234,15 +235,18 @@ class DataBase():
 
         connection.commit()
         self._close_sqlite(connection,cursor)
-
-    def getComments(self):
-        return database_in_mem.Comments
     
     def getCommentByID(self, commentID):
-        for comment in database_in_mem.Comments:
-            if comment["ID"] is commentID:
-                return comment
-        return None
+        (connection, cursor) = self._connect_sqlite()
+        cursor.execute('SELECT * FROM comments WHERE ID={}'.format(commentID))
+        comment = cursor.fetchone()
+
+        # arrays and objects, such as videoframes and subreddits, need to be re-parsed
+        comment["comment"] = json.loads(comment["comment"])
+
+        self._close_sqlite(connection, cursor)
+
+        return comment
     
     def rateComment(self, commentID, rating):
         comment = self.getCommentByID(commentID)
