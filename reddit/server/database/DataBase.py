@@ -13,7 +13,7 @@ class database_in_mem:
     Comments = [
         {
             "ID": 0,
-            "score": 10,
+            "score": 1000,
             "author": "testuser",
             "state": "NORMAL",
             "published": "11/30/23",
@@ -21,7 +21,7 @@ class database_in_mem:
             "comment": [
                 {
                     "ID": 1,
-                    "score": 9,
+                    "score": 99,
                     "author": "testuser",
                     "state": "NORMAL",
                     "published": "11/30/23",

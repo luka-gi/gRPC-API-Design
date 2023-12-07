@@ -47,19 +47,19 @@ def test_posting(client):
     print("Post 6 received: ")
     print(response)
 
-    # print("\n\n")
-    # print("test get N comments from the post\n")
-    # response = client.getNCommentsFromPost(0, 2)
+    print("\n\n")
+    print("test get N comments from the post\n")
+    response = client.getNCommentsFromPost(0, 2)
 
-    # print("Post 7 recieved")
-    # print(response)
+    print("Post 7 recieved")
+    print(response)
 
-    # print("\n\n")
-    # print("test get a post from the ID\n")
-    # response = client.getPostMeta(0)
+    print("\n\n")
+    print("test get a post from the ID\n")
+    response = client.getPostMeta(0)
 
-    # print("Post 8 recieved")
-    # print(response)
+    print("Post 8 recieved")
+    print(response)
 
 def test_commenting(client):
 
@@ -84,19 +84,19 @@ def test_commenting(client):
     print("Comment 3 recieved")
     print(response)
 
-    # print("\n\n")
-    # print("test getting N comments from a comment\n")
-    # response = client.getNCommentsFromComment(0, 2)
+    print("\n\n")
+    print("test getting N comments from a comment\n")
+    response = client.getNCommentsFromComment(0, 2)
 
-    # print("Comment 4 recieved")
-    # print(response)
+    print("Comment 4 recieved")
+    print(response)
 
-    # print("\n\n")
-    # print("test get a comments from the ID\n")
-    # response = client.getComment(0)
+    print("\n\n")
+    print("test get a comments from the ID\n")
+    response = client.getComment(0)
 
-    # print("Comment 5 recieved")
-    # print(response)
+    print("Comment 5 recieved")
+    print(response)
 
 def test_commenting_invalid(client):
     print("\n\n")
@@ -205,7 +205,7 @@ class client_test:
         test_posting(client)
         test_commenting(client)
         
-        # test_commenting_invalid(client)
-        # test_posting_invalid(client)
+        test_commenting_invalid(client)
+        test_posting_invalid(client)
         
-        # test_bonus(client)
+        test_bonus(client)
