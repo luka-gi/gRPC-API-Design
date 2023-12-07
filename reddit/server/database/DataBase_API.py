@@ -58,35 +58,35 @@ class DataBase():
         }
 
         cursor.execute('''INSERT INTO
-                            posts
-                            (
-                                title,
-                                text,
-                                score,
-                                state,
-                                published,
-                                ID,
-                                type,
-                                content,
-                                comment,
-                                subreddit,
-                                tags
-                            )
-                            VALUES
-                            (
-                                :title,
-                                :text,
-                                :score,
-                                :state,
-                                :published,
-                                :ID,
-                                :type,
-                                :content,
-                                :comment,
-                                :subreddit,
-                                :tags
-                            )
-                            ''',input)
+            posts
+            (
+                title,
+                text,
+                score,
+                state,
+                published,
+                ID,
+                type,
+                content,
+                comment,
+                subreddit,
+                tags
+            )
+            VALUES
+            (
+                :title,
+                :text,
+                :score,
+                :state,
+                :published,
+                :ID,
+                :type,
+                :content,
+                :comment,
+                :subreddit,
+                :tags
+            )
+            ''',input)
 
         connection.commit()
         self._close_sqlite(connection,cursor)
@@ -110,35 +110,35 @@ class DataBase():
         }
 
         cursor.execute('''INSERT INTO
-                            posts
-                            (
-                                title,
-                                text,
-                                score,
-                                state,
-                                published,
-                                ID,
-                                type,
-                                content,
-                                comment,
-                                subreddit,
-                                tags
-                            )
-                            VALUES
-                            (
-                                :title,
-                                :text,
-                                :score,
-                                :state,
-                                :published,
-                                :ID,
-                                :type,
-                                :content,
-                                :comment,
-                                :subreddit,
-                                :tags
-                            )
-                            ''',input)
+            posts
+            (
+                title,
+                text,
+                score,
+                state,
+                published,
+                ID,
+                type,
+                content,
+                comment,
+                subreddit,
+                tags
+            )
+            VALUES
+            (
+                :title,
+                :text,
+                :score,
+                :state,
+                :published,
+                :ID,
+                :type,
+                :content,
+                :comment,
+                :subreddit,
+                :tags
+            )
+            ''',input)
 
         connection.commit()
         self._close_sqlite(connection,cursor)
@@ -196,14 +196,44 @@ class DataBase():
         return pre_increment
     
     def addNewComment(self, score, published, state, content, ID, author):
-        database_in_mem.Comments.append({
-            "score":score,
-            "published":published,
-            "state":state,
-            "content":content,
-            "ID":ID,
-            "author":author
-        })
+
+        (connection, cursor) = self._connect_sqlite()
+        
+        input = {
+            "ID": ID,
+            "score": score,
+            "author": author,
+            "state": state,
+            "published": published,
+            "content": content,
+            "comment": "[]",
+        }
+
+        cursor.execute('''INSERT INTO
+        comments
+        (
+            ID,
+            score,
+            author,
+            state,
+            published,
+            content,
+            comment
+        )
+        VALUES
+        (
+            :ID,
+            :score,
+            :author,
+            :state,
+            :published,
+            :content,
+            :comment
+        )
+        ''',input)
+
+        connection.commit()
+        self._close_sqlite(connection,cursor)
 
     def getComments(self):
         return database_in_mem.Comments

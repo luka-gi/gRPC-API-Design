@@ -70,33 +70,33 @@ def test_commenting(client):
     print("Comment 1 recieved")
     print(response)
 
-    print("\n\n")
-    print("test rating a comment\n")
-    response = client.rateComment(0, "UPVOTE")
+    # print("\n\n")
+    # print("test rating a comment\n")
+    # response = client.rateComment(0, "UPVOTE")
 
-    print("Comment 2 recieved")
-    print(response)
+    # print("Comment 2 recieved")
+    # print(response)
 
-    print("\n\n")
-    print("test rating a comment\n")
-    response = client.rateComment(10, "DOWNVOTE")
+    # print("\n\n")
+    # print("test rating a comment\n")
+    # response = client.rateComment(10, "DOWNVOTE")
 
-    print("Comment 3 recieved")
-    print(response)
+    # print("Comment 3 recieved")
+    # print(response)
 
-    print("\n\n")
-    print("test getting N comments from a comment\n")
-    response = client.getNCommentsFromComment(0, 2)
+    # print("\n\n")
+    # print("test getting N comments from a comment\n")
+    # response = client.getNCommentsFromComment(0, 2)
 
-    print("Comment 4 recieved")
-    print(response)
+    # print("Comment 4 recieved")
+    # print(response)
 
-    print("\n\n")
-    print("test get a comments from the ID\n")
-    response = client.getComment(0)
+    # print("\n\n")
+    # print("test get a comments from the ID\n")
+    # response = client.getComment(0)
 
-    print("Comment 5 recieved")
-    print(response)
+    # print("Comment 5 recieved")
+    # print(response)
 
 def test_commenting_invalid(client):
     print("\n\n")
@@ -203,7 +203,7 @@ class client_test:
     def run(client):
         print("starting basic test\n")
         test_posting(client)
-        # test_commenting(client)
+        test_commenting(client)
         
         # test_commenting_invalid(client)
         # test_posting_invalid(client)
