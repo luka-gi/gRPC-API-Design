@@ -176,6 +176,8 @@ class DataBase():
     def ratePost(self, postID, rating):
         (connection, cursor) = self._connect_sqlite()
 
+        post = None
+
         if(rating == "UPVOTE"):
             cursor.execute('UPDATE posts SET score=score+1 WHERE ID={} RETURNING *'.format(postID))
             post = cursor.fetchone()
@@ -249,15 +251,20 @@ class DataBase():
         return comment
     
     def rateComment(self, commentID, rating):
-        comment = self.getCommentByID(commentID)
+        (connection, cursor) = self._connect_sqlite()
 
-        if not comment:
-            return None
+        comment = None
 
         if(rating == "UPVOTE"):
-            comment["score"] = comment["score"] + 1
+            cursor.execute('UPDATE comments SET score=score+1 WHERE ID={} RETURNING *'.format(commentID))
+            comment = cursor.fetchone()
+
         elif(rating == "DOWNVOTE"):
-            comment["score"] = comment["score"] - 1
+            cursor.execute('UPDATE comments SET score=score-1 WHERE ID={} RETURNING *'.format(commentID))
+            comment = cursor.fetchone()
+
+        connection.commit()
+        self._close_sqlite(connection, cursor)
 
         return comment
 

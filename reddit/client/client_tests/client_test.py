@@ -70,19 +70,19 @@ def test_commenting(client):
     print("Comment 1 recieved")
     print(response)
 
-    # print("\n\n")
-    # print("test rating a comment\n")
-    # response = client.rateComment(0, "UPVOTE")
+    print("\n\n")
+    print("test rating a comment\n")
+    response = client.rateComment(0, "UPVOTE")
 
-    # print("Comment 2 recieved")
-    # print(response)
+    print("Comment 2 recieved")
+    print(response)
 
-    # print("\n\n")
-    # print("test rating a comment\n")
-    # response = client.rateComment(10, "DOWNVOTE")
+    print("\n\n")
+    print("test rating a comment\n")
+    response = client.rateComment(10, "DOWNVOTE")
 
-    # print("Comment 3 recieved")
-    # print(response)
+    print("Comment 3 recieved")
+    print(response)
 
     # print("\n\n")
     # print("test getting N comments from a comment\n")
