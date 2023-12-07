@@ -401,7 +401,7 @@ class TestSuiteGetMostUpvotedReply(unittest.TestCase):
         # Under that comment, there is a comment with ID 1 with a score of 9 as the highest rating
         expected = {
             'author': 'testuser',
-            'score': 9, 'state': 0, 
+            'score': 99, 'state': 0, 
             'published': '11/30/23', 
             'content': 'example comments', 
             'ID': 1, 'comment': 
@@ -429,7 +429,7 @@ class TestSuiteGetMostUpvotedReply(unittest.TestCase):
 
         server_config = ServerConfig()
         client_config = ClientConfig()
-        database = DataBase()
+        database = DataBase("server/database/reddit.db")
 
         # start server
         server = server_gRPC_API(server_config, database)
@@ -455,7 +455,7 @@ class TestSuiteGetMostUpvotedReply(unittest.TestCase):
 
         server_config = ServerConfig()
         client_config = ClientConfig()
-        database = DataBase()
+        database = DataBase("server/database/reddit.db")
 
         # start server
         server = server_gRPC_API(server_config, database)

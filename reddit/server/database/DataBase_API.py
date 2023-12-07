@@ -7,8 +7,8 @@ import sqlite3
 import json
 
 class DataBase():
-    def __init__(self):
-        pass
+    def __init__(self,db_path="database/reddit.db"):
+        self.db_path = db_path
 
     def connect(self):
         return self
@@ -27,7 +27,7 @@ class DataBase():
         return dict
     
     def _connect_sqlite(self):
-        connection = sqlite3.connect("database/reddit.db")
+        connection = sqlite3.connect(self.db_path)
         connection.row_factory = self._to_dict
         cursor = connection.cursor()
 
