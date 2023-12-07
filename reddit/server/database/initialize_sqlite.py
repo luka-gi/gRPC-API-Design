@@ -34,7 +34,7 @@ posts
     score INTEGER,
     state TEXT,
     published TEXT,
-    ID INTEGER,
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
     type TEXT,
     content TEXT,
     comment TEXT,
@@ -46,7 +46,7 @@ posts
 cur.execute('''CREATE TABLE IF NOT EXISTS
 comments
 (
-    ID INTEGER,
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
     score INTEGER,
     author TEXT,
     state TEXT,

@@ -16,23 +16,23 @@ class Post:
         self.title = request.meta.title
         self.text = request.meta.text
         self.state = request.meta.state
-        self.ID = DBConn.getNewPostID()
         self.subreddit = DBConn.getSubreddit(request.meta.subreddit)
+        self.ID = None
         self.tags = []
 
         # validate tags
         for tag in request.meta.tags:
-            if tag in self.subreddit["tags"]:
-                self.tags.append(tag)
+                if tag in self.subreddit["tags"]:
+                    self.tags.append(tag)
 
     def convertMeta(self):
         return post_pb2.PostMeta(
+                ID=self.ID,
                 title = self.title,
                 text = self.text,
                 state = self.state,
                 published = self.published,
                 score = self.score,
-                ID = self.ID,
                 subreddit = subreddit_pb2.Subreddit(
                     name = self.subreddit["name"],
                     state = self.subreddit["state"],
@@ -69,13 +69,12 @@ class Image(Post):
         )
     
     def addNewImageToDatabase(self, DBConn):
-        DBConn.addNewImagePost(
+        self.ID = DBConn.addNewImagePost(
             self.title,
             self.text,
             self.state,
             self.published,
             self.score,
-            self.ID,
             self.type,
             self.content,
             self.subreddit,
@@ -110,13 +109,12 @@ class Video(Post):
         )
     
     def addNewVideoToDatabase(self, DBConn):
-        DBConn.addNewVideoPost(
+        self.ID = DBConn.addNewVideoPost(
             self.title,
             self.text,
             self.state,
             self.published,
             self.score,
-            self.ID,
             self.type,
             self.content,
             self.subreddit,
@@ -139,11 +137,11 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         # parse request
         newImage = Image(self.DBConn,request)
 
-        # make post response
-        newImageResponse = newImage.convertToImagePostResponse()
-
         # add to DB
         newImage.addNewImageToDatabase(self.DBConn)
+
+        # make post response
+        newImageResponse = newImage.convertToImagePostResponse()
 
         return newImageResponse
 
@@ -157,11 +155,11 @@ class Poster(post_pb2_grpc.PostServiceServicer):
         # parse request
         newVideo = Video(self.DBConn,request)
 
-        # make post response
-        newVideoResponse = newVideo.convertToVideoPostResponse()
-
         # add to DB
         newVideo.addNewVideoToDatabase(self.DBConn)
+        
+        # make post response
+        newVideoResponse = newVideo.convertToVideoPostResponse()
 
         return newVideoResponse
     
