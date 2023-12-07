@@ -269,16 +269,22 @@ class DataBase():
         return comment
 
     def getSubreddit(self, name):
-        for subreddit in database_in_mem.SubReddits:
-            if subreddit["name"] == name:
-                return subreddit
-        return None
+        (connection, cursor) = self._connect_sqlite()
+        cursor.execute('SELECT * FROM subreddits WHERE name="{}"'.format(name))
+        subreddit = cursor.fetchone()
+
+        # arrays and objects, such as videoframes and subreddits, need to be re-parsed
+        subreddit["tags"] = json.loads(subreddit["tags"])
+
+        self._close_sqlite(connection, cursor)
+
+        return subreddit
     
     def getSubredditTags(self, name):
         subreddit = self.getSubreddit(name)
 
         if(subreddit):
-            return subreddit.tags
+            return subreddit["tags"]
         else:
             return None
 
