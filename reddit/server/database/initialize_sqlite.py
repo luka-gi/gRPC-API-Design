@@ -3,13 +3,11 @@ import json
 from DataBase import database_in_mem
 
 DB = database_in_mem()
-
 conn = sqlite3.connect("./reddit.db")
-
-#
 cur = conn.cursor()
 
-# create table
+########################################
+# create tables
 cur.execute('''CREATE TABLE IF NOT EXISTS
 users
 (
@@ -56,7 +54,8 @@ comments
 )
 ''')
 
-# populate
+########################################
+# populate the databases
 cur.executemany('''INSERT INTO
 users
 (
@@ -89,7 +88,7 @@ VALUES
 )
 ''',subreddits)
 
-# convert subreddits tag field to json object
+# convert post fields to json object
 posts = DB.Posts
 
 for post in posts:
@@ -129,7 +128,7 @@ VALUES
 )
 ''',posts)
 
-# convert subreddits tag field to json object
+# convert comments fields to json object
 comments = DB.Comments
 
 for comment in comments:
@@ -158,7 +157,8 @@ VALUES
 )
 ''',comments)
 
-# test getting db items
+########################################
+# test getting db items, print to console
 cur.execute('SELECT * FROM users')
 print(cur.fetchmany(2))
 cur.execute('SELECT * FROM subreddits')

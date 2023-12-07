@@ -8,8 +8,6 @@ class database_in_mem:
         }
     ]
 
-    CommentID = 12
-
     Comments = [
         {
             "ID": 0,
@@ -127,8 +125,6 @@ class database_in_mem:
             "tags": ["tag4","tag5","tag6"]
         },
     ]
-
-    PostID = 2
 
     Posts = [
         {

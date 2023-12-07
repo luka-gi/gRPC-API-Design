@@ -1,3 +1,7 @@
+"""
+This is a file for the clients that separates client implementation from gRPC methods/parsing
+"""
+
 import grpc
 import sys
 
@@ -65,6 +69,7 @@ class client_gRPC_API:
     
     def postVideo(self, title, text, state, video_frames, subreddit, tags):
 
+        # arg checks
         if (title == None or text == None or video_frames == None or subreddit == None or tags == None):
             return None
 
@@ -176,7 +181,7 @@ class client_gRPC_API:
         self.channel.close()
 
     def createComment(self, userID, content, state):
-
+        # arg checking
         if (userID == None or content == None):
             return None
 
